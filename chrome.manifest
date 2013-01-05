@@ -1,0 +1,4 @@
+content bookmarksmenufilter ./
+
+locale bookmarksmenufilter en-US locale/en-US/
+locale bookmarksmenufilter ru    locale/ru/
