@@ -1,4 +1,4 @@
-Allows you to filter bookmark and history menus – just open menu and type what you want to find.
+Allows you to filter bookmarks and history menus – just open menu and type what you want to find.
 
 ##### Hotkeys:
 <table>

@@ -9,7 +9,7 @@
 		<em:bootstrap>true</em:bootstrap>
 		<em:name>Bookmarks Menu Filter</em:name>
 		<em:version>0.1.0a35</em:version>
-		<em:description>Allows you to filter bookmark and history menus – just open menu and type what you want to find</em:description>
+		<em:description>Allows you to filter bookmarks and history menus – just open menu and type what you want to find</em:description>
 		<em:creator>Infocatcher</em:creator>
 		<em:updateURL>http://infocatcher.ucoz.net/ext/fx/bookmarks_menu_filter/update.rdf</em:updateURL>
 		<em:updateKey>MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDLgtEbrhCdZetIAanFNvkT441WwBgXcg1Zzlo5s5
