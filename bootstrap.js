@@ -1144,7 +1144,7 @@ EventHandler.prototype = {
 			tt.className = c
 				.replace(clss, "")
 				.replace(/ +/, " ")
-				.replace(/^ /, "");
+				.replace(/^ | $/g, "");
 		}
 	},
 	ttSetClass: function(clss, add) {
