@@ -849,6 +849,7 @@ EventHandler.prototype = {
 		this.filterBookmarks(popup, filterString, noStats);
 		this._filterLast = Date.now();
 	},
+	_lastRegExpError: null,
 	filterBookmarks: function(popup, filterString, noStats) {
 		var regularFilter = !popup;
 		if(regularFilter) {
@@ -890,6 +891,11 @@ EventHandler.prototype = {
 					};
 				}
 				catch(e) {
+					if(e != this._lastRegExpError) {
+						this._lastRegExpError = "" + e;
+						Components.utils.reportError(e);
+					}
+					this.updateHintDelay(e + "\n" + this.defaultHint);
 					matcher = function(s) {
 						return false;
 					};
@@ -912,6 +918,8 @@ EventHandler.prototype = {
 
 		if(flags.has)
 			this.ttSetClass("bookmarksMenuFilter-invalidRegExp", flags.regExp && !pattern);
+		if(!flags.regExp || pattern)
+			this.updateHintDelay();
 
 		regularFilter && !noStats && this.showFilter(true /*ignoreNotFound*/);
 		this.filterBookmarksPopup(popup, filterString, matcher, false, popup); //~ todo: "linear" pref ?
@@ -1117,9 +1125,6 @@ EventHandler.prototype = {
 		tt._flags  = e("flags");
 		tt._count  = e("count");
 		tt._hint   = e("hint");
-		this.window.setTimeout(function(_this) {
-			tt._hint.textContent = _this.wo.getLocalized("hint");
-		}, 0, this);
 		return setProperty(this, "tt", tt);
 	},
 	get filterOpen() {
@@ -1266,11 +1271,17 @@ EventHandler.prototype = {
 			f.hidden = !flagsStr;
 		}
 	},
-	toggleHint: function() {
+	get defaultHint() {
+		return setProperty(this, "defaultHint", this.wo.getLocalized("hint"));
+	},
+	toggleHint: function(show) {
 		var tt = this.tt;
 		var hint = tt._hint;
-		var show = hint.hidden;
+		if(show === undefined)
+			show = hint.hidden;
 		if(show) {
+			if(!hint.textContent)
+				hint.textContent = this.defaultHint;
 			var bo = tt.boxObject;
 			var x = bo.screenX, y = bo.screenY;
 		}
@@ -1285,6 +1296,23 @@ EventHandler.prototype = {
 			// Move tooltip, if needed
 			this.showFilter();
 		}
+	},
+	_updateHintTimer: 0,
+	updateHintDelay: function(text) {
+		this.window.clearTimeout(this._updateHintTimer);
+		this._updateHintTimer = this.window.setTimeout(function(_this) {
+			_this.updateHint(text);
+		}, 40, this);
+	},
+	updateHint: function(text) {
+		var hint = this.tt._hint;
+		if(!text)
+			text = this.defaultHint;
+		if(hint.textContent == text)
+			return;
+		hint.textContent = text;
+		if(this.filterOpen)
+			this.showFilter();
 	},
 
 	attrHidden: "_bookmarksmenufilter_hidden",
