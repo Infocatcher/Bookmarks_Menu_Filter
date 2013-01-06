@@ -209,6 +209,9 @@ var windowsObserver = {
 					box-shadow: 0 0 0 1em #f66 inset;\n\
 					color: white;\n\
 				}\n\
+				.bookmarksMenuFilter-invalidRegExp #bookmarksMenuFilter-flags {\n\
+					color: red !important;\n\
+				}\n\
 				[' + EventHandler.prototype.attrHidden + '="true"] {\n\
 					display: none !important;\n\
 				}' + (
@@ -907,6 +910,9 @@ EventHandler.prototype = {
 			}
 		}
 
+		if(flags.has)
+			this.ttSetClass("bookmarksMenuFilter-invalidRegExp", flags.regExp && !pattern);
+
 		regularFilter && !noStats && this.showFilter(true /*ignoreNotFound*/);
 		this.filterBookmarksPopup(popup, filterString, matcher, false, popup); //~ todo: "linear" pref ?
 		regularFilter && !noStats && this.showFilter();
@@ -1119,6 +1125,29 @@ EventHandler.prototype = {
 	get filterOpen() {
 		return this.tt.state == "open";
 	},
+	// Be careful: we check only for indexOf() to increase performance!
+	ttAddClass: function(clss) {
+		var tt = this.tt;
+		var c = tt.className;
+		if(c.indexOf(clss) == -1)
+			tt.className = (c ? c + " " : "") + clss;
+	},
+	ttRemoveClass: function(clss) {
+		var tt = this.tt;
+		var c = tt.className;
+		if(c.indexOf(clss) != -1) {
+			tt.className = c
+				.replace(clss, "")
+				.replace(/ +/, " ")
+				.replace(/^ /, "");
+		}
+	},
+	ttSetClass: function(clss, add) {
+		if(add)
+			this.ttAddClass(clss);
+		else
+			this.ttRemoveClass(clss);
+	},
 	showFilter: function(ignoreNotFound, popup, s, _noRetry) {
 		popup = popup || this._currentPopup;
 		s = s || this._filter;
@@ -1128,11 +1157,8 @@ EventHandler.prototype = {
 		var count = popup[this.pCount] || 0;
 		tt._count.setAttribute("value", count);
 
-		if(!ignoreNotFound) {
-			var notFoundClass = !count && s ? "bookmarksMenuFilter-notFound" : "";
-			if(notFoundClass != tt.className)
-				tt.className = notFoundClass;
-		}
+		if(!ignoreNotFound)
+			this.ttSetClass("bookmarksMenuFilter-notFound", !count && s);
 
 		var w = Math.max(prefs.get("minPanelWidth", 120), popup.boxObject.width);
 		var trgPopup = this._filterPopup;
@@ -1235,8 +1261,10 @@ EventHandler.prototype = {
 			flagsStr = "i\u2260I"; // "not equal to" symbol
 
 		var f = this.tt._flags;
-		f.setAttribute("value", flagsStr);
-		f.hidden = !flagsStr;
+		if(f.getAttribute("value") != flagsStr) {
+			f.setAttribute("value", flagsStr);
+			f.hidden = !flagsStr;
+		}
 	},
 	toggleHint: function() {
 		var tt = this.tt;
