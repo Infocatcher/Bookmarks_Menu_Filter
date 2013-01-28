@@ -724,7 +724,7 @@ EventHandler.prototype = {
 		if(copy || cut) {
 			Components.classes["@mozilla.org/widget/clipboardhelper;1"]
 				.getService(Components.interfaces.nsIClipboardHelper)
-				.copyString(prevFilter);
+				.copyString(prevFilter, this.window.document);
 		}
 
 		if(resetFilter)
