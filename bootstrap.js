@@ -96,7 +96,7 @@ var windowsObserver = {
 		if(e.type == "DOMContentLoaded") {
 			var window = e.originalTarget.defaultView;
 			window.removeEventListener("DOMContentLoaded", this, false);
-			_log("DOMContentLoaded " + window.location);
+			_log("DOMContentLoaded " + window.location.href.substr(0, 255));
 			this.initWindow(window, WINDOW_LOADED);
 		}
 	},
