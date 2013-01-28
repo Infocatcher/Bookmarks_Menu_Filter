@@ -58,7 +58,6 @@ var windowsObserver = {
 			this.initWindow(ws.getNext(), reason);
 
 		Services.ww.registerNotification(this);
-		//this.loadStyles();
 		if(reason != APP_STARTUP)
 			prefs.init();
 	},
@@ -73,7 +72,8 @@ var windowsObserver = {
 
 		Services.ww.unregisterNotification(this);
 
-		this.unloadStyles();
+		if(reason != APP_SHUTDOWN)
+			this.unloadStyles();
 		prefs.destroy();
 
 		for(var p in this._handlers) {
@@ -146,13 +146,14 @@ var windowsObserver = {
 	},
 
 	_stylesLoaded: false,
-	loadStyles: function() {
+	loadStyles: function(window) {
 		if(this._stylesLoaded)
 			return;
 		this._stylesLoaded = true;
 		var sss = this.sss;
-		if(!sss.sheetRegistered(this.cssURI, sss.USER_SHEET))
-			sss.loadAndRegisterSheet(this.cssURI, sss.USER_SHEET);
+		var cssURI = this.cssURI = this.makeCSSURI(window);
+		if(!sss.sheetRegistered(cssURI, sss.USER_SHEET))
+			sss.loadAndRegisterSheet(cssURI, sss.USER_SHEET);
 	},
 	unloadStyles: function() {
 		if(!this._stylesLoaded)
@@ -167,7 +168,13 @@ var windowsObserver = {
 		return this.sss = Components.classes["@mozilla.org/content/style-sheet-service;1"]
 			.getService(Components.interfaces.nsIStyleSheetService);
 	},
-	get cssURI() {
+	makeCSSURI: function(window) {
+		var s = window.document.documentElement.style;
+		var boxShadow = "boxShadow" in s && "box-shadow"
+			|| "MozBoxShadow" in s && "-moz-box-shadow";
+		var hasBoxShadow = !!boxShadow;
+		if(!boxShadow)
+			boxShadow = "-moz-box-shadow";
 		var cssStr = '\
 			@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");\n\
 			@-moz-document url("chrome://browser/content/browser.xul"),\n\
@@ -205,8 +212,7 @@ var windowsObserver = {
 					font-size: 90%;\n\
 				}\n\
 				.bookmarksMenuFilter-notFound #bookmarksMenuFilter-value {\n\
-					-moz-box-shadow: 0 0 0 1em #f66 inset;\n\
-					box-shadow: 0 0 0 1em #f66 inset;\n\
+					' + boxShadow + ': 0 0 0 1em #f66 inset;\n\
 					color: white;\n\
 				}\n\
 				.bookmarksMenuFilter-invalidRegExp #bookmarksMenuFilter-flags {\n\
@@ -215,7 +221,7 @@ var windowsObserver = {
 				[' + EventHandler.prototype.attrHidden + '="true"] {\n\
 					display: none !important;\n\
 				}' + (
-					Services.vc.compare(Services.appinfo.platformVersion, "1.9.1") >= 0
+					hasBoxShadow
 						? ""
 						: '\n\
 				.bookmarksMenuFilter-notFound #bookmarksMenuFilter-value {\n\
@@ -225,8 +231,7 @@ var windowsObserver = {
 				}'
 				) + '\n\
 			}';
-		delete this.cssURI;
-		return this.cssURI = Services.io.newURI("data:text/css," + encodeURIComponent(cssStr), null, null);
+		return Services.io.newURI("data:text/css," + encodeURIComponent(cssStr), null, null);
 	},
 
 	get bundle() {
@@ -568,7 +573,7 @@ EventHandler.prototype = {
 		window.addEventListener("popuphiding", this, false);
 		window.addEventListener("mouseover", this, true);
 		window.addEventListener("DOMMenuItemActive", this, true);
-		this.wo.loadStyles();
+		this.wo.loadStyles(window);
 		_log("initInputWatcher()");
 	},
 	destroyInputWatcher: function() {
