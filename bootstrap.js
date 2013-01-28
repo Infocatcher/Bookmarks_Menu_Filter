@@ -395,7 +395,7 @@ EventHandler.prototype = {
 	popupHandler: function(e) {
 		var popup = e.target;
 		if(this.pIgnorePopup in popup) {
-			// We can't prevent popup - "popup.open = true" doesn't works for popups inside closed popup
+			// We can't prevent popup - "popup.open = true" doesn't work for popups inside closed popup
 			//e.preventDefault();
 			return;
 		}
