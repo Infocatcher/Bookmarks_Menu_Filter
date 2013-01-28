@@ -379,7 +379,7 @@ EventHandler.prototype = {
 	},
 	handleEvent: function(e) {
 		switch(e.type) {
-			case "popupshowing":      this.popupHandler(e);      break;
+			case "popupshowing":
 			case "popuphiding":       this.popupHandler(e);      break;
 			case "keydown":           this.keyDownHandler(e);    break;
 			case "keypress":          this.keyPressHandler(e);   break;
