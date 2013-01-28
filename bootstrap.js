@@ -659,7 +659,12 @@ EventHandler.prototype = {
 	},
 	keyPressHandler: function(e) {
 		var curPopup = this._currentPopup;
-		if(curPopup && (curPopup.state == "closed" || curPopup.state == "hiding")) {
+		if(!curPopup) {
+			_log("*** keyPressHandler: something wrong, this._currentPopup are " + curPopup);
+			this.destroyInputWatcher();
+			return;
+		}
+		if(curPopup.state == "closed" || curPopup.state == "hiding") {
 			_log("*** NoScript? Popup are closed, but we don't receive popuphiding event");
 			this.destroyInputWatcher();
 			return;
