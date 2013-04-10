@@ -1024,8 +1024,10 @@ EventHandler.prototype = {
 					//	hide = true;
 					//else
 					//	hasVisible = true;
+					var stopped = false;
 					this._filterAsyncTimer = timer(function() {
 						if(this._filterCallback) {
+							stopped = true;
 							_gen.next();
 							return;
 						}
@@ -1042,7 +1044,7 @@ EventHandler.prototype = {
 					if(load) {
 						restoreNode();
 						this._filterRestore = null;
-						Array.forEach(
+						!stopped && Array.forEach(
 							node.getElementsByTagName("menupopup"),
 							function(node) {
 								node.setAttribute(this.attrLoaded, "true");
@@ -1266,7 +1268,7 @@ EventHandler.prototype = {
 		tt._count.setAttribute("value", count);
 
 		var notFound = !count && s;
-		_log("!!! showFilter: count: " + count + " notFound: " + notFound + " ignore: " + ignoreNotFound);
+		//_log("!!! showFilter: count: " + count + ", notFound: " + notFound + ", ignore: " + ignoreNotFound);
 		if(!notFound || !ignoreNotFound)
 			this.ttSetClass("bookmarksMenuFilter-notFound", notFound);
 
