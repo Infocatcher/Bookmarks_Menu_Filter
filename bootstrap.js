@@ -956,6 +956,7 @@ EventHandler.prototype = {
 	_filterInProgress: false,
 	_filterCallback: null,
 	_filterAsyncTimer: 0,
+	_filterRestore: null,
 	filterBookmarksPopup: function() {
 		this._filterInProgress = true;
 		function worker(popup, filterString, matcher, linear, parentPopup, callback, _level) {
@@ -974,7 +975,6 @@ EventHandler.prototype = {
 
 			var childs = Array.slice(popup.childNodes);
 			var hasVisible = false;
-			var _this = this;
 
 			for(var i = 0, l = childs.length; i < l; ++i) {
 				var node = childs[i];
@@ -1008,6 +1008,13 @@ EventHandler.prototype = {
 						mp[this.pIgnorePopup] = true;
 						node.collapsed = true;
 						node.open = true;
+
+						var _this = this;
+						var restoreNode = this._filterRestore = function() {
+							node.open = false;
+							node.collapsed = false;
+							delete mp[_this.pIgnorePopup];
+						};
 					}
 					var subMatcher = matcher && prefs.get("checkFoldersLabels", true) && matcher(node.getAttribute("label"))
 						? null
@@ -1023,20 +1030,18 @@ EventHandler.prototype = {
 							return;
 						}
 						this.filterBookmarksPopup(mp, filterString, subMatcher, linear, parentPopup, function(_hasVisible) {
-							if(!_hasVisible)
-								hide = true;
-							else
+							if(_hasVisible)
 								hasVisible = true;
+							else
+								hide = true;
 							_gen.next();
 						}, _level);
 					}, this);
 					yield;
 
 					if(load) {
-						node.open = false;
-						node.collapsed = false;
-						delete mp[this.pIgnorePopup];
-
+						restoreNode();
+						this._filterRestore = null;
 						Array.forEach(
 							node.getElementsByTagName("menupopup"),
 							function(node) {
@@ -1122,6 +1127,11 @@ EventHandler.prototype = {
 		this.stopFilterDelay();
 		this._filterInProgress = false;
 		this._filterCallback = null;
+		var restore = this._filterRestore;
+		if(restore) {
+			this._filterRestore = null;
+			restore();
+		}
 	},
 	restoreActiveItem: function(popup, item) {
 		var document = popup.ownerDocument;
