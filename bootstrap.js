@@ -959,7 +959,7 @@ EventHandler.prototype = {
 	_filterInProgress: false,
 	_filterCallback: null,
 	_filterAsyncTimer: 0,
-	_filterRestore: null,
+	_filterRestore: [],
 	filterBookmarksPopup: function() {
 		this._filterInProgress = true;
 		function worker(popup, filterString, matcher, linear, parentPopup, callback, _level) {
@@ -1013,11 +1013,12 @@ EventHandler.prototype = {
 						node.open = true;
 
 						var _this = this;
-						var restoreNode = this._filterRestore = function() {
+						var restoreNode = function() {
 							node.open = false;
 							node.collapsed = false;
 							delete mp[_this.pIgnorePopup];
 						};
+						this._filterRestore.push(restoreNode);
 					}
 					var subMatcher = matcher && prefs.get("checkFoldersLabels", true) && matcher(node.getAttribute("label"))
 						? null
@@ -1046,7 +1047,9 @@ EventHandler.prototype = {
 
 					if(load) {
 						restoreNode();
-						this._filterRestore = null;
+						this._filterRestore = this._filterRestore.filter(function(f) {
+							return f != restoreNode;
+						});
 						!stopped && Array.forEach(
 							node.getElementsByTagName("menupopup"),
 							function(node) {
@@ -1112,7 +1115,7 @@ EventHandler.prototype = {
 				var filterCallback = this._filterCallback;
 				if(filterCallback) {
 					this._filterCallback = null;
-					filterCallback.call(this);
+					timer(filterCallback, this);
 				}
 			}
 			else {
@@ -1132,11 +1135,15 @@ EventHandler.prototype = {
 		this.stopFilterDelay();
 		this._filterInProgress = false;
 		this._filterCallback = null;
-		var restore = this._filterRestore;
-		if(restore) {
-			this._filterRestore = null;
-			restore();
-		}
+		this._filterRestore.forEach(function(f) {
+			try {
+				f();
+			}
+			catch(e) {
+				Components.utils.reportError(e);
+			}
+		});
+		this._filterRestore.length = 0;
 	},
 	restoreActiveItem: function(popup, item) {
 		var document = popup.ownerDocument;
