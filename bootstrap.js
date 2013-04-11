@@ -437,8 +437,11 @@ EventHandler.prototype = {
 		_log("Popups count: " + this._popups.length);
 
 		if(
-			popup.parentNode.getAttribute("query") == "true"
-			&& this.pFilter in popup
+			this.pFilter in popup
+			&& (
+				popup.parentNode.getAttribute("query") == "true"
+				|| /(?:^|\s)history-submenu(?:\s|$)/.test(popup.parentNode.className)
+			)
 		) {
 			// Refilter dynamically generated popups
 			//~ todo: improve fix for "recent tags" menu
@@ -1475,7 +1478,8 @@ EventHandler.prototype = {
 			|| node.getAttribute("type") == "places";
 	},
 	isBookmarkItem: function(node) {
-		return /(?:^|\s)bookmark-item(?:\s|$)/.test(node.className);
+		// "history-submenu" - https://addons.mozilla.org/addon/history-submenus-2/
+		return /(?:^|\s)(?:bookmark-item|history-submenu)(?:\s|$)/.test(node.className);
 	},
 	isBookmark: function(node) {
 		return node.localName == "menuitem" && this.isBookmarkItem(node);
