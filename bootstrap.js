@@ -953,13 +953,16 @@ EventHandler.prototype = {
 			this.updateHintDelay();
 
 		regularFilter && !noStats && this.showFilter(true /*ignoreNotFound*/);
-		if(this._filterInProgress)
-			this._filterCallback = this.filterBookmarksPopup.bind(this, popup, filterString, matcher, false, popup);
-		else
+		if(!this._filterInProgress)
 			this.filterBookmarksPopup(popup, filterString, matcher, false, popup);
+		else {
+			this.stopFilter(true);
+			timer(function() {
+				this.filterBookmarksPopup(popup, filterString, matcher, false, popup);
+			}, this);
+		}
 		//regularFilter && !noStats && this.showFilter();
 	},
-	_filterCallback: null,
 	_filterAsyncTimer: 0,
 	_filterRestore: [],
 	__filterInProgress: false,
@@ -1047,13 +1050,7 @@ EventHandler.prototype = {
 				//	hide = true;
 				//else
 				//	hasVisible = true;
-				var stopped = false;
 				this._filterAsyncTimer = timer(function() {
-					if(this._filterCallback) {
-						stopped = true;
-						_gen.next();
-						return;
-					}
 					this.filterBookmarksPopup(mp, filterString, subMatcher, linear, parentPopup, function(_hasVisible) {
 						if(_hasVisible)
 							hasVisible = true;
@@ -1069,7 +1066,7 @@ EventHandler.prototype = {
 					this._filterRestore = this._filterRestore.filter(function(f) {
 						return f != restoreNode;
 					});
-					!stopped && Array.forEach(
+					Array.forEach(
 						node.getElementsByTagName("menupopup"),
 						function(node) {
 							node.setAttribute(this.attrLoaded, "true");
@@ -1131,11 +1128,6 @@ EventHandler.prototype = {
 			this.showFilterDelay();
 
 			this._filterInProgress = false;
-			var filterCallback = this._filterCallback;
-			if(filterCallback) {
-				this._filterCallback = null;
-				timer(filterCallback, this);
-			}
 		}
 		else {
 			this.showFilterDelay(true /*ignoreNotFound*/); // Ajust position
@@ -1145,11 +1137,11 @@ EventHandler.prototype = {
 		callback && callback.call(this, hasVisible);
 		yield;
 	},
-	stopFilter: function() {
+	stopFilter: function(restart) {
 		cancelTimer(this._filterAsyncTimer);
 		this.stopFilterDelay();
-		this._filterInProgress = false;
-		this._filterCallback = null;
+		if(!restart)
+			this._filterInProgress = false;
 		this._filterRestore.forEach(function(f) {
 			try {
 				f();
