@@ -1546,14 +1546,17 @@ function setProperty(o, p, v) {
 	return setProperty.apply(this, arguments);
 }
 
-function _info(s) {
-	Services.console.logStringMessage(LOG_PREFIX + s);
+// Be careful, loggers always works until prefs aren't initialized
+// (and if "debug" preference has default value)
+function ts() {
+	var d = new Date();
+	var ms = d.getMilliseconds();
+	return d.toLocaleFormat("%M:%S:") + "000".substr(String(ms).length) + ms + " ";
 }
 function _log(s) {
-	if(prefs.get("debug"))
-		_info(s);
-}
-function _dump(s) {
-	if(prefs.get("debug"))
-		dump(LOG_PREFIX + s + "\n");
+	if(!prefs.get("debug", true))
+		return;
+	var msg = LOG_PREFIX + ts() + s;
+	Services.console.logStringMessage(msg);
+	dump(msg + "\n");
 }
