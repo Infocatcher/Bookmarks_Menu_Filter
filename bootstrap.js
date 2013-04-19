@@ -230,6 +230,9 @@ var windowsObserver = {
 					' + boxShadow + ': 0 0 0 1em #f66 inset;\n\
 					color: white;\n\
 				}\n\
+				.bookmarksMenuFilter-busy #bookmarksMenuFilter-count {\n\
+					color: grayText !important;\n\
+				}\n\
 				.bookmarksMenuFilter-invalidRegExp #bookmarksMenuFilter-flags {\n\
 					color: red !important;\n\
 				}\n\
@@ -956,10 +959,19 @@ EventHandler.prototype = {
 			this.filterBookmarksPopup(popup, filterString, matcher, false, popup);
 		//regularFilter && !noStats && this.showFilter();
 	},
-	_filterInProgress: false,
 	_filterCallback: null,
 	_filterAsyncTimer: 0,
 	_filterRestore: [],
+	__filterInProgress: false,
+	get _filterInProgress() {
+		return this.__filterInProgress;
+	},
+	set _filterInProgress(inProgress) {
+		if(inProgress == this.__filterInProgress)
+			return;
+		this.__filterInProgress = inProgress;
+		this.ttSetClass("bookmarksMenuFilter-busy", inProgress);
+	},
 	filterBookmarksPopup: function(/* see arguments for filterBookmarksPopupWorker */) {
 		this._filterInProgress = true;
 		var worker = this.filterBookmarksPopupWorker;
