@@ -859,14 +859,14 @@ EventHandler.prototype = {
 		this._filterTimer = timer(function() {
 			this._filterScheduled = false;
 			this.filterBookmarks(popup, s);
-		}, this, prefs.get("filterFirstDelay", 150));
+		}, this, prefs.get("filterFirstDelay", 300));
 	},
 	filterBookmarksProxy: function(popup, filterString, noStats) {
 		//~ todo: check noStats usage... argument can be removed ?
 		if(this._filterScheduled)
 			return;
 		var now = Date.now();
-		var delay = this._filterLast + prefs.get("filterMinDelay", 50) - now;
+		var delay = this._filterLast + prefs.get("filterMinDelay", 100) - now;
 		if(delay > 0) {
 			_log("filterBookmarksProxy => wait " + delay);
 			this._filterScheduled = true;
@@ -992,7 +992,7 @@ EventHandler.prototype = {
 			cancelTimer(this._ignoreActivationTimer);
 			this._ignoreActivation = true;
 		}
-		else if(++_level > prefs.get("filterMaxLevel", 5)) {
+		else if(++_level > prefs.get("filterMaxLevel", 15)) {
 			_log("filterMaxLevel reached, stop filtering");
 			//return true;
 			return;

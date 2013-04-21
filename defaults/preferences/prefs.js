@@ -1,9 +1,9 @@
 pref("extensions.bookmarksMenuFilter.debug", false);
 
 pref("extensions.bookmarksMenuFilter.checkFoldersLabels", true);
-pref("extensions.bookmarksMenuFilter.filterMaxLevel", 5);
-pref("extensions.bookmarksMenuFilter.filterFirstDelay", 150);
-pref("extensions.bookmarksMenuFilter.filterMinDelay", 50);
+pref("extensions.bookmarksMenuFilter.filterMaxLevel", 15);
+pref("extensions.bookmarksMenuFilter.filterFirstDelay", 300);
+pref("extensions.bookmarksMenuFilter.filterMinDelay", 100);
 pref("extensions.bookmarksMenuFilter.minPanelWidth", 120);
 
 pref("extensions.bookmarksMenuFilter.altCloseMenu", false);
