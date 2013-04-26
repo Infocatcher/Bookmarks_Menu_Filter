@@ -690,7 +690,10 @@ EventHandler.prototype = {
 			this.destroyInputWatcher();
 			return;
 		}
-		if(curPopup.state == "closed" || curPopup.state == "hiding") {
+		if(
+			(curPopup.state == "closed" || curPopup.state == "hiding")
+			&& Services.appinfo.OS != "Darwin"
+		) {
 			_log("*** NoScript? Popup are closed, but we don't receive popuphiding event");
 			this.destroyInputWatcher();
 			return;
@@ -1314,7 +1317,7 @@ EventHandler.prototype = {
 		var y = popup.boxObject.screenY - tt.boxObject.height;
 		_log("showFilter() y: " + y);
 		if(y < 0) {
-			var maxOverlap = 8;
+			var maxOverlap = 12;
 			// Allow higher overlap, if first popup items isn't bookmark items:
 			for(var ch = popup.firstChild; ch; ch = ch.nextSibling) {
 				if(!this.isNodeVisible(ch))
@@ -1489,7 +1492,8 @@ EventHandler.prototype = {
 	},
 	isPlacesPopup: function(node) {
 		return node.getAttribute("placespopup") == "true"
-			|| node.getAttribute("type") == "places";
+			|| node.getAttribute("type") == "places"
+			|| node.getAttribute("context") == "placesContext"; // Mac OS
 	},
 	isBookmarkItem: function(node) {
 		// "history-submenu" - https://addons.mozilla.org/addon/history-submenus-2/
