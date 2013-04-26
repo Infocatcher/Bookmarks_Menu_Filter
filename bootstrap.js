@@ -700,8 +700,10 @@ EventHandler.prototype = {
 		}
 
 		var isEscape = e.keyCode == e.DOM_VK_ESCAPE;
-		if(isEscape && (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey))
+		if(isEscape && (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey)) {
+			_log("Esc pressed, ignore (and allow hide popup)");
 			return; // Allow hide popup
+		}
 		if(isEscape && this.filterOpen && !this._filter) {
 			this.stopEvent(e);
 			this.hideFilter();
@@ -746,11 +748,14 @@ EventHandler.prototype = {
 				|| isEscape
 				|| e.ctrlKey || e.altKey || e.metaKey
 			)
-		)
+		) {
+			_log("Unsupported hotkey, ignore");
 			return;
+		}
 
 		var prevFilter = this._filter;
 		if(copy || cut) {
+			_log("Hotkey: " + (copy ? "copy" : "cut"));
 			Components.classes["@mozilla.org/widget/clipboardhelper;1"]
 				.getService(Components.interfaces.nsIClipboardHelper)
 				.copyString(prevFilter, this.window.content.document);
@@ -774,7 +779,7 @@ EventHandler.prototype = {
 			this._filter += chr;
 
 		this.stopEvent(e);
-		//_log("keyPressHandler() " + chr);
+		_log("keyPressHandler() " + chr);
 		this.showFilter(true /*ignoreNotFound*/); // This should be fast... show as typed
 		if(!prevFilter && this._filter)
 			this.filterBookmarksDelay();
