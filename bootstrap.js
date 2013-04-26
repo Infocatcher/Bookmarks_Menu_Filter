@@ -125,7 +125,7 @@ var windowsObserver = {
 		var i = ++this._currentId;
 		this._handlers[i] = eh;
 		this._windows[i] = window;
-		_log("initWindow() #" + i + " " + window.location);
+		//_log("initWindow() #" + i + " " + window.location);
 	},
 	destroyWindow: function(window, reason) {
 		window.removeEventListener("DOMContentLoaded", this, false); // Window can be closed before DOMContentLoaded
