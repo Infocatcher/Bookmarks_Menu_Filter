@@ -1216,7 +1216,7 @@ EventHandler.prototype = {
 				noautohide="true"\
 				orient="horizontal"\
 				onpopuphiding="return this.__allowHide;"\
-				onclick="this.realHidePopup();">\
+				onclick="this.stop();">\
 				<vbox id="bookmarksMenuFilter-tooltipBox" flex="1">\
 					<hbox id="bookmarksMenuFilter-filterBox" align="center" flex="1">\
 						<label id="bookmarksMenuFilter-value" flex="1" crop="center" />\
@@ -1232,6 +1232,14 @@ EventHandler.prototype = {
 			this.__allowHide = true;
 			this.hidePopup();
 			this.__allowHide = false;
+		};
+		var _this = this;
+		tt.stop = function() {
+			if(!_this._hasInputWatcher)
+				return;
+			// Wrong things may happens... so yser should be able to stop all operations
+			_log("Click on tooltip => destroyInputWatcher()");
+			_this.destroyInputWatcher();
 		};
 		function e(id) {
 			return tt.getElementsByAttribute("id", "bookmarksMenuFilter-" + id)[0];
