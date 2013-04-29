@@ -86,16 +86,15 @@ var windowsObserver = {
 
 	observe: function(subject, topic, data) {
 		if(topic == "domwindowopened")
-			subject.addEventListener("DOMContentLoaded", this, false);
+			subject.addEventListener("load", this, false);
 		else if(topic == "domwindowclosed")
 			this.destroyWindow(subject, WINDOW_CLOSED);
 	},
 
 	handleEvent: function(e) {
-		if(e.type == "DOMContentLoaded") {
+		if(e.type == "load") {
 			var window = e.originalTarget.defaultView;
-			window.removeEventListener("DOMContentLoaded", this, false);
-			_log("DOMContentLoaded " + window.location.href.substr(0, 255));
+			window.removeEventListener("load", this, false);
 			this.initWindow(window, WINDOW_LOADED);
 		}
 	},
@@ -128,7 +127,7 @@ var windowsObserver = {
 		//_log("initWindow() #" + i + " " + window.location);
 	},
 	destroyWindow: function(window, reason) {
-		window.removeEventListener("DOMContentLoaded", this, false); // Window can be closed before DOMContentLoaded
+		window.removeEventListener("load", this, false); // Window can be closed before "load" event
 		if(reason == WINDOW_CLOSED && !this.isTargetWindow(window))
 			return;
 		var indx = this.getWindowIndex(window);
