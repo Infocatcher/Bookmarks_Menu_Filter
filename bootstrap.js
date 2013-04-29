@@ -1374,6 +1374,13 @@ EventHandler.prototype = {
 				_log("Tooltip below popup? Allow small overlap and fix tooltip position");
 				tt.moveTo(tt.boxObject.screenX, y);
 			}
+			else if(tt.boxObject.screenX < -4 || tt.boxObject.screenY < -4) {
+				_log("Tooltip not in the screen, move it right/down");
+				tt.moveTo(
+					Math.max(-4, tt.boxObject.screenX),
+					Math.max(-4, tt.boxObject.screenY)
+				);
+			}
 		}
 		else {
 			var x = Math.max(0, popup.boxObject.screenX);
