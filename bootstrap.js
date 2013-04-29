@@ -393,6 +393,8 @@ EventHandler.prototype = {
 			).forEach(function(node) {
 				node.removeAttribute(this.attrLoaded);
 			}, this);
+		}
+		if(reason != APP_SHUTDOWN) {
 			if("_tt" in this) {
 				this._tt.parentNode.removeChild(this._tt);
 				delete this._tt;
