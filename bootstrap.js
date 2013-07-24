@@ -1068,7 +1068,7 @@ EventHandler.prototype = {
 						_gen.next();
 					}, _level);
 				}, this);
-				yield;
+				yield 0;
 
 				if(load) {
 					restoreNode();
@@ -1144,7 +1144,7 @@ EventHandler.prototype = {
 
 		//return hasVisible;
 		callback && callback.call(this, hasVisible);
-		yield;
+		yield 0;
 	},
 	stopFilter: function(restart) {
 		cancelTimer(this._filterAsyncTimer);
