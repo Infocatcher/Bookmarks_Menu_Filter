@@ -34,6 +34,15 @@
 
 		<em:localized>
 			<Description>
+				<em:locale>en-US</em:locale>
+				<em:name>Bookmarks Menu Filter</em:name>
+				<em:description>Allows you to filter bookmarks and history menus – just open menu and type what you want to find</em:description>
+				<em:creator>Infocatcher</em:creator>
+			</Description>
+		</em:localized>
+
+		<em:localized>
+			<Description>
 				<em:locale>ru</em:locale>
 				<em:name>Bookmarks Menu Filter</em:name>
 				<em:description>Позволяет фильтровать меню закладок и истории – просто откройте меню и наберите то, что хотите найти</em:description>
