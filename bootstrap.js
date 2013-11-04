@@ -683,6 +683,17 @@ EventHandler.prototype = {
 			this.stopEvent(e);
 			_log("Prevent Alt key to use Alt+Shift in any order");
 		}
+		else if(
+			e.keyCode == e.DOM_VK_ESCAPE
+			&& !e.ctrlKey && !e.altKey && !e.shiftKey && !e.metaKey
+			&& this.filterOpen
+			&& Services.vc.compare(Services.appinfo.platformVersion, "25.0a1") >= 0
+		) {
+			// See https://bugzilla.mozilla.org/show_bug.cgi?id=501496
+			_log("Stop keydown event for Escape key");
+			this.stopEvent(e); // This also stops "keypress" in Firefox 25+
+			this.keyPressHandler(e);
+		}
 	},
 	keyPressHandler: function(e) {
 		var curPopup = this._currentPopup;
@@ -702,7 +713,7 @@ EventHandler.prototype = {
 
 		var isEscape = e.keyCode == e.DOM_VK_ESCAPE;
 		if(isEscape && (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey)) {
-			_log("Esc pressed, ignore (and allow hide popup)");
+			_log("Escape pressed with modifier key, ignore (and allow hide popup)");
 			return; // Allow hide popup
 		}
 		if(isEscape && this.filterOpen && !this._filter) {
