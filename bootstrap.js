@@ -154,9 +154,10 @@ var windowsObserver = {
 		return windows;
 	},
 	isTargetWindow: function(window) {
-		var winType = window.document.documentElement.getAttribute("windowtype");
-		return winType == "navigator:browser"
-			|| winType == "navigator:private"; // SeaMonkey >= 2.19a1 (2013-03-27)
+		// Note: we don't have "windowtype" attribute for private windows in SeaMonkey 2.19+
+		var loc = window.location.href;
+		return loc == "chrome://browser/content/browser.xul"
+			|| loc == "chrome://navigator/content/navigator.xul";
 	},
 
 	_stylesLoaded: false,
