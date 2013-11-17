@@ -689,6 +689,7 @@ EventHandler.prototype = {
 			e.keyCode == e.DOM_VK_ESCAPE
 			&& !e.ctrlKey && !e.altKey && !e.shiftKey && !e.metaKey
 			&& this.filterOpen
+			&& !this.contextMenuOpened
 			&& Services.vc.compare(Services.appinfo.platformVersion, "25.0a1") >= 0
 		) {
 			// See https://bugzilla.mozilla.org/show_bug.cgi?id=501496
@@ -712,6 +713,8 @@ EventHandler.prototype = {
 			this.destroyInputWatcher();
 			return;
 		}
+		if(this.contextMenuOpened)
+			return;
 
 		var isEscape = e.keyCode == e.DOM_VK_ESCAPE;
 		if(isEscape && (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey)) {
@@ -799,6 +802,22 @@ EventHandler.prototype = {
 			this.filterBookmarksDelay();
 		else
 			this.filterBookmarksProxy();
+	},
+	get contextMenuOpened() {
+		var curPopup = this._currentPopup;
+		var doc = curPopup && curPopup.ownerDocument;
+		return doc && doc.popupNode && Array.some(
+			doc.getElementsByTagName("menupopup"),
+			function(popup) {
+				if(
+					popup.state != "open"
+					|| popup.boxObject && popup.boxObject instanceof Components.interfaces.nsIMenuBoxObject
+				)
+					return false;
+				_log("Opened context menu: " + popup.id);
+				return true;
+			}
+		);
 	},
 	get delLastWordPattern() {
 		var delimiters = "\\u0000-\\u002f:-@\\[-`\\{-\\u00a0"
