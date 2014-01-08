@@ -1014,6 +1014,10 @@ EventHandler.prototype = {
 		if(inProgress == this.__filterInProgress)
 			return;
 		this.__filterInProgress = inProgress;
+		if(inProgress)
+			this._filterStart = Date.now();
+		else if(this._filterStart)
+			_log("Filter duration: " + (Date.now() - this._filterStart) + " ms");
 		this.ttSetClass("bookmarksMenuFilter-busy", inProgress);
 	},
 	filterBookmarksPopup: function(/* see arguments for filterBookmarksPopupWorker */) {
