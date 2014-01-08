@@ -1092,6 +1092,10 @@ EventHandler.prototype = {
 				//else
 				//	hasVisible = true;
 				this._filterAsyncTimer = timer(function() {
+					if(!this._currentPopup) {
+						_gen.next();
+						return;
+					}
 					this.filterBookmarksPopup(mp, filterString, subMatcher, linear, parentPopup, function(_hasVisible) {
 						if(_hasVisible)
 							hasVisible = true;
@@ -1107,7 +1111,7 @@ EventHandler.prototype = {
 					this._filterRestore = this._filterRestore.filter(function(f) {
 						return f != restoreNode;
 					});
-					Array.forEach(
+					this._currentPopup && Array.forEach(
 						node.getElementsByTagName("menupopup"),
 						function(node) {
 							node.setAttribute(this.attrLoaded, "true");
@@ -1152,26 +1156,33 @@ EventHandler.prototype = {
 
 		if(firstCall) {
 			cancelTimer(this._selectBMNodeTimer);
-			this._selectBMNodeTimer = timer(function() {
-				var lastActive = this._lastActiveNode;
-				if(lastActive && (lastActive.parentNode != popup || !this.isNodeVisible(lastActive)))
-					lastActive = null;
-				if(lastActive && this._activeNode == lastActive) // Nothing to do :)
-					return;
-				_log("restoreActiveItem: " + (lastActive ? lastActive.getAttribute("label") : "<first>"));
-				this.restoreActiveItem(popup, lastActive);
-			}, this, 0);
-			this._ignoreActivationTimer = timer(function() {
+			if(this._currentPopup) {
+				this._selectBMNodeTimer = timer(function() {
+					var lastActive = this._lastActiveNode;
+					if(lastActive && (lastActive.parentNode != popup || !this.isNodeVisible(lastActive)))
+						lastActive = null;
+					if(lastActive && this._activeNode == lastActive) // Nothing to do :)
+						return;
+					_log("restoreActiveItem: " + (lastActive ? lastActive.getAttribute("label") : "<first>"));
+					this.restoreActiveItem(popup, lastActive);
+				}, this, 0);
+				this._ignoreActivationTimer = timer(function() {
+					this._ignoreActivation = false;
+				}, this, 50);
+			}
+			else {
 				this._ignoreActivation = false;
-			}, this, 50);
+			}
 
 			this.stopFilterDelay();
-			this.showFilterDelay();
+			if(this._currentPopup)
+				this.showFilterDelay();
 
 			this._filterInProgress = false;
 		}
 		else {
-			this.showFilterDelay(true /*ignoreNotFound*/); // Ajust position
+			if(this._currentPopup)
+				this.showFilterDelay(true /*ignoreNotFound*/); // Ajust position
 		}
 
 		//return hasVisible;
@@ -1326,6 +1337,10 @@ EventHandler.prototype = {
 	},
 	showFilter: function(ignoreNotFound, popup, s, _noRetry) {
 		popup = popup || this._currentPopup;
+		if(!popup) {
+			_log("showFilter(): looks like popup is closed, nothing to do");
+			return;
+		}
 		s = s || this._filter;
 		var tt = this.tt;
 		//_log("showFilter : " + (popup[this.pFilter] || ""));
