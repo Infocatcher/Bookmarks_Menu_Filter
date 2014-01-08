@@ -1095,7 +1095,7 @@ EventHandler.prototype = {
 				//	hide = true;
 				//else
 				//	hasVisible = true;
-				this._filterAsyncTimer = timer(function() {
+				this._filterAsyncTimer = delay(function() {
 					if(!this._currentPopup) {
 						_gen.next();
 						return;
@@ -1601,6 +1601,18 @@ function destroyTimers() {
 		_timers[id].cancel();
 	_timers = { __proto__: null };
 	_timersCounter = 0;
+}
+
+function delay(callback, context) {
+	var tm = Services.tm;
+	var DISPATCH_NORMAL = Components.interfaces.nsIThread.DISPATCH_NORMAL;
+	delay = function(callback, context) {
+		// Note: dispatch(function() { ... }) works only in Firefox 4+
+		tm.mainThread.dispatch({run: function() {
+			callback.call(context);
+		}}, DISPATCH_NORMAL);
+	}
+	delay.apply(this, arguments);
 }
 
 function setProperty(o, p, v) {

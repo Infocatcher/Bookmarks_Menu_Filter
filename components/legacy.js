@@ -58,6 +58,11 @@ const Services = {
 		delete this.strings;
 		return this.strings = Components.classes["@mozilla.org/intl/stringbundle;1"]
 			.getService(Components.interfaces.nsIStringBundleService);	
+	},
+	get tm() {
+		delete this.tm;
+		return this.tm = Components.classes["@mozilla.org/thread-manager;1"]
+			.getService(Components.interfaces.nsIThreadManager);	
 	}
 };
 
