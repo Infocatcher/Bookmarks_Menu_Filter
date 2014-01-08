@@ -14,7 +14,7 @@ License.
 The Original Code is Bookmarks Menu Filter.
 The Initial Developer of the Original Code is Infocatcher.
 
-Portions created by the Initial Developer are Copyright (C) 2012-2013
+Portions created by the Initial Developer are Copyright (C) 2012-2014
 the Initial Developer. All Rights Reserved.
 
 Contributor(s):
