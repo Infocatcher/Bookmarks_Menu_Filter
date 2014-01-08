@@ -1376,7 +1376,7 @@ EventHandler.prototype = {
 		}
 
 		var y = popup.boxObject.screenY - tt.boxObject.height;
-		_log("showFilter() y: " + y);
+		//_log("showFilter() y: " + y);
 		if(y < 0) {
 			var maxOverlap = 12;
 			// Allow higher overlap, if first popup items isn't bookmark items:
@@ -1388,7 +1388,7 @@ EventHandler.prototype = {
 				maxOverlap += ch.boxObject.height;
 			}
 			if(y >= -maxOverlap) {
-				_log("showFilter() y -> 0, allow overlap");
+				_log("showFilter() set y = 0, allow overlap");
 				y = 0; // Allow overlap, but show on top
 			}
 		}
