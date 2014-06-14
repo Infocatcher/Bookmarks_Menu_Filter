@@ -2,7 +2,8 @@ const WINDOW_LOADED = -1;
 const WINDOW_CLOSED = -2;
 
 const LOG_PREFIX = "[Bookmarks Menu Filter] ";
-var rootURI;
+var rootURI = "chrome://bookmarksmenufilter/content/";
+var platformVersion;
 
 if(!("Services" in this))
 	Components.utils.import("resource://gre/modules/Services.jsm");
@@ -18,11 +19,14 @@ function install(params, reason) {
 function uninstall(params, reason) {
 }
 function startup(params, reason) {
-	rootURI = params && params.resourceURI
-		? params.resourceURI.spec
-		: new Error().fileName
-			.replace(/^.* -> /, "")
-			.replace(/[^\/]+$/, "");
+	platformVersion = parseFloat(Services.appinfo.platformVersion);
+	if(platformVersion >= 2 && platformVersion < 10) {
+		rootURI = params && params.resourceURI
+			? params.resourceURI.spec
+			: new Error().fileName
+				.replace(/^.* -> /, "")
+				.replace(/[^\/]+$/, "");
+	}
 
 	if(
 		Services.vc.compare(Services.appinfo.platformVersion, "10.0") < 0
