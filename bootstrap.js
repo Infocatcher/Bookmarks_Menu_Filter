@@ -257,15 +257,32 @@ var windowsObserver = {
 		return Services.io.newURI("data:text/css," + encodeURIComponent(cssStr), null, null);
 	},
 
+	get locale() {
+		delete this.locale;
+		return this.locale = Components.classes["@mozilla.org/chrome/chrome-registry;1"]
+			.getService(Components.interfaces.nsIXULChromeRegistry)
+			.getSelectedLocale("global");
+	},
 	get bundle() {
-		try {
-			var bundle = Services.strings.createBundle("chrome://bookmarksmenufilter/locale/bmf.properties");
-		}
-		catch(e) {
-			Components.utils.reportError(e);
+		var test = platformVersion >= 2 && platformVersion < 8 ? "hint" : "";
+		function createBundle(uri, test) {
+			try {
+				var bundle = Services.strings.createBundle(uri);
+				if(bundle && test) try {
+					bundle.GetStringFromName(test);
+				}
+				catch(e2) {
+					return null;
+				}
+			}
+			catch(e) {
+			}
+			return bundle;
 		}
 		delete this.bundle;
-		return this.bundle = bundle;
+		return this.bundle = createBundle("chrome://bookmarksmenufilter/locale/bmf.properties", test)
+			|| createBundle(rootURI + "locale/" + this.locale + "/bmf.properties", test)
+			|| createBundle(rootURI + "locale/en-US/bmf.properties", test);
 	},
 	getLocalized: function(sid) {
 		try {
@@ -274,7 +291,7 @@ var windowsObserver = {
 		catch(e) {
 			Components.utils.reportError(e);
 		}
-		return "Can't get localized string for \"" + sid + "\"\nGecko 4.0 - 7.0?";
+		return "Can't get localized string for \"" + sid + "\"\nGecko 2.0 - 7.0?";
 	}
 };
 
