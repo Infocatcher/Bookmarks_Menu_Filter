@@ -33,11 +33,6 @@ const Services = {
            .getService(Components.interfaces.nsIXULAppInfo)
            .QueryInterface(Components.interfaces.nsIXULRuntime);
 	},
-	get vc() {
-		delete this.vc;
-		return this.vc = Components.classes["@mozilla.org/xpcom/version-comparator;1"]
-			.getService(Components.interfaces.nsIVersionComparator);
-	},
 	get prefs() {
 		delete this.prefs;
 		return this.prefs = Components.classes["@mozilla.org/preferences-service;1"]
