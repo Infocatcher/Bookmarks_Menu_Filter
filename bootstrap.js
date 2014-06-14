@@ -29,7 +29,7 @@ function startup(params, reason) {
 	}
 
 	if(
-		Services.vc.compare(Services.appinfo.platformVersion, "10.0") < 0
+		platformVersion < 10
 		&& "addBootstrappedManifestLocation" in Components.manager
 	)
 		Components.manager.addBootstrappedManifestLocation(params.installPath);
@@ -38,7 +38,7 @@ function startup(params, reason) {
 }
 function shutdown(params, reason) {
 	if(
-		Services.vc.compare(Services.appinfo.platformVersion, "10.0") < 0
+		platformVersion < 10
 		&& "addBootstrappedManifestLocation" in Components.manager
 	)
 		Components.manager.removeBootstrappedManifestLocation(params.installPath);
@@ -287,7 +287,7 @@ var prefs = {
 		this.initialized = true;
 
 		//~ todo: add new condition when https://bugzilla.mozilla.org/show_bug.cgi?id=564675 will be fixed
-		if(Services.vc.compare(Services.appinfo.platformVersion, "2.0a1") >= 0)
+		if(platformVersion >= 2)
 			this.loadDefaultPrefs();
 		Services.prefs.addObserver(this.ns, this, false);
 	},
@@ -694,7 +694,7 @@ EventHandler.prototype = {
 			&& !e.ctrlKey && !e.altKey && !e.shiftKey && !e.metaKey
 			&& this.filterOpen
 			&& !this.contextMenuOpened
-			&& Services.vc.compare(Services.appinfo.platformVersion, "25.0a1") >= 0
+			&& platformVersion >= 25
 		) {
 			// See https://bugzilla.mozilla.org/show_bug.cgi?id=501496
 			_log("Stop keydown event for Escape key");
@@ -1365,7 +1365,7 @@ EventHandler.prototype = {
 		var trgPopup = this._filterPopup;
 		this._filterPopup = popup;
 
-		if(Services.vc.compare(Services.appinfo.platformVersion, "2.0a1pre") < 0) {
+		if(platformVersion < 2) {
 			if(
 				tt.boxObject.width != w
 				|| trgPopup != popup
