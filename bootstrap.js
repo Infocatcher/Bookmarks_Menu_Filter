@@ -283,7 +283,7 @@ var prefs = {
 		this.initialized = true;
 
 		//~ todo: add new condition when https://bugzilla.mozilla.org/show_bug.cgi?id=564675 will be fixed
-		if(Services.vc.compare(Services.appinfo.platformVersion, "4.0a1") >= 0)
+		if(Services.vc.compare(Services.appinfo.platformVersion, "2.0a1") >= 0)
 			this.loadDefaultPrefs();
 		Services.prefs.addObserver(this.ns, this, false);
 	},
