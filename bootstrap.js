@@ -456,8 +456,8 @@ EventHandler.prototype = {
 			this.popupHidingHandler(e);
 	},
 	popupShowingHandler: function(e) {
-		_log("Opened places popup");
 		var popup = e.target;
+		_log("Opened places popup: " + popup.parentNode.getAttribute("label"));
 
 		this._currentPopup = popup;
 		this._popups.push(popup);
@@ -514,9 +514,9 @@ EventHandler.prototype = {
 
 		this.initInputWatcher();
 	},
-	popupHidingHandler: function(e) {
-		_log("Closed places popup");
+	popupHidingHandler: function(e, _isFake) {
 		var popup = e.target;
+		_log("Closed places popup: " + popup.parentNode.getAttribute("label"));
 
 		var indx = this._popups.indexOf(popup);
 		if(indx != -1)
@@ -565,6 +565,15 @@ EventHandler.prototype = {
 			filterOpened = false;
 		}
 
+		if(!_isFake) {
+			if(this._checkForClosedPopupsTimer)
+				cancelTimer(this._checkForClosedPopupsTimer);
+			this._checkForClosedPopupsTimer = timer(function() {
+				this._checkForClosedPopupsTimer = 0;
+				this.checkForClosedPopups();
+			}, this, 250);
+		}
+
 		if(this._currentPopup != popup)
 			return;
 		this._currentPopup = null;
@@ -607,6 +616,21 @@ EventHandler.prototype = {
 
 		//if(this.pFilter in mp)
 		//	this.showFilter();
+	},
+	_checkForClosedPopupsTimer: 0,
+	checkForClosedPopups: function() {
+		var closedPopups = this._popups.filter(function(popup) {
+			return popup.state == "closed";
+		});
+		if(!closedPopups.length) {
+			_log("checkForClosedPopups(): OK");
+			return;
+		}
+		closedPopups.forEach(function(popup) {
+			var label = popup.parentNode && popup.parentNode.getAttribute("label");
+			_log("*** checkForClosedPopups(): found closed popup in this._popups: " + label);
+			this.popupHidingHandler({ target: popup }, true);
+		}, this);
 	},
 
 	initInputWatcher: function() {
