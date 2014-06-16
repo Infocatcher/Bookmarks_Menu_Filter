@@ -521,11 +521,12 @@ EventHandler.prototype = {
 		var indx = this._popups.indexOf(popup);
 		if(indx != -1)
 			this._popups.splice(indx, 1);
-		else
+		else {
 			_log(
 				"Warning: closed popup not found in this._popups, label: "
 				+ popup.parentNode.getAttribute("label")
 			);
+		}
 
 		_log("Popups count: " + this._popups.length);
 
@@ -722,7 +723,7 @@ EventHandler.prototype = {
 	keyPressHandler: function(e) {
 		var curPopup = this._currentPopup;
 		if(!curPopup) {
-			_log("*** keyPressHandler: something wrong, this._currentPopup are " + curPopup);
+			_log("*** keyPressHandler(): something wrong, this._currentPopup is " + curPopup);
 			this.destroyInputWatcher();
 			return;
 		}
@@ -730,7 +731,7 @@ EventHandler.prototype = {
 			(curPopup.state == "closed" || curPopup.state == "hiding")
 			&& Services.appinfo.OS != "Darwin"
 		) {
-			_log("*** NoScript? Popup are closed, but we don't receive popuphiding event");
+			_log("*** NoScript? Popup is closed, but we don't receive popuphiding event");
 			this.destroyInputWatcher();
 			return;
 		}
@@ -817,7 +818,7 @@ EventHandler.prototype = {
 			this._filter += chr;
 
 		this.stopEvent(e);
-		_log("keyPressHandler() " + chr);
+		_log("keyPressHandler(): " + chr);
 		this.showFilter(true /*ignoreNotFound*/); // This should be fast... show as typed
 		if(!prevFilter && this._filter)
 			this.filterBookmarksDelay();
@@ -930,7 +931,7 @@ EventHandler.prototype = {
 		var now = Date.now();
 		var delay = this._filterLast + prefs.get("filterMinDelay", 100) - now;
 		if(delay > 0) {
-			_log("filterBookmarksProxy => wait " + delay);
+			_log("filterBookmarksProxy() => wait " + delay);
 			this._filterScheduled = true;
 			this._filterProxyTimer = timer(function() {
 				this._filterScheduled = false;
@@ -954,7 +955,7 @@ EventHandler.prototype = {
 		//if(!popup)
 		//	return;
 
-		_log("filterBookmarks: \"" + filterString + "\"");
+		_log("filterBookmarks(): \"" + filterString + "\"");
 
 		var flags = this.parsePrefixes(filter);
 		if(flags.has)
@@ -1188,7 +1189,7 @@ EventHandler.prototype = {
 						lastActive = null;
 					if(lastActive && this._activeNode == lastActive) // Nothing to do :)
 						return;
-					_log("restoreActiveItem: " + (lastActive ? lastActive.getAttribute("label") : "<first>"));
+					_log("restoreActiveItem(): " + (lastActive ? lastActive.getAttribute("label") : "<first>"));
 					this.restoreActiveItem(popup, lastActive);
 				}, this, 0);
 				this._ignoreActivationTimer = timer(function() {
@@ -1413,7 +1414,7 @@ EventHandler.prototype = {
 				maxOverlap += ch.boxObject.height;
 			}
 			if(y >= -maxOverlap) {
-				_log("showFilter() set y = 0, allow overlap");
+				_log("showFilter(): set y = 0, allow overlap");
 				y = 0; // Allow overlap, but show on top
 			}
 		}
@@ -1425,7 +1426,7 @@ EventHandler.prototype = {
 
 		if(y < 0 && !_noRetry) { //~ todo: first bookmark in this case only partially visible
 			this._showFilterRetryTimer = timer(function() {
-				_log("showFilter() Retry...");
+				_log("showFilter(): retry...");
 				this.showFilter(ignoreNotFound, popup, s, true);
 			}, this, 10);
 		}
@@ -1547,8 +1548,7 @@ EventHandler.prototype = {
 	},
 	showNodes: function(parent) {
 		_log(
-			"showNodes: "
-			+ (
+			"showNodes(): " + (
 				parent.parentNode && "getAttribute" in parent.parentNode
 					? '"' + parent.parentNode.getAttribute("label") + '"'
 					: parent
