@@ -490,14 +490,7 @@ EventHandler.prototype = {
 					this.filterBookmarksProxy(popup, filter);
 					if(prefs.get("hackForRecentTagsMenu")) {
 						_log("Emulate DOM_VK_HOME for recent tags menu");
-						var document = popup.ownerDocument;
-						var evt = document.createEvent("KeyboardEvent");
-						evt.initKeyEvent(
-							"keypress", true /*bubbles*/, true /*cancelable*/, document.defaultView,
-							false /*ctrlKey*/, false /*altKey*/, false /*shiftKey*/, false /*metaKey*/,
-							evt.DOM_VK_HOME /*keyCode*/, 0 /*charCode*/
-						);
-						popup.dispatchEvent(evt);
+						this.dispatchKeyEvent(popup, "DOM_VK_HOME");
 					}
 				}, this, 0);
 			}
@@ -1255,17 +1248,9 @@ EventHandler.prototype = {
 		this._filterRestore.length = 0;
 	},
 	restoreActiveItem: function(popup, item) {
+		_log("restoreActiveItem(): " + popup.parentNode.getAttribute("label"));
 		var document = popup.ownerDocument;
 		var window = document.defaultView;
-		function keypress(key) {
-			var evt = document.createEvent("KeyboardEvent");
-			evt.initKeyEvent(
-				"keypress", true /*bubbles*/, true /*cancelable*/, window,
-				false /*ctrlKey*/, false /*altKey*/, false /*shiftKey*/, false /*metaKey*/,
-				evt[key], 0 /*charCode*/
-			);
-			popup.dispatchEvent(evt);
-		};
 		var first = true;
 		Array.some(
 			popup.childNodes,
@@ -1273,7 +1258,7 @@ EventHandler.prototype = {
 				var nn = node.nodeName;
 				if(nn != "menu" && nn != "menuitem" || !this.isNodeVisible(node))
 					return false;
-				keypress(first ? "DOM_VK_HOME" : "DOM_VK_DOWN");
+				this.dispatchKeyEvent(popup, first ? "DOM_VK_HOME" : "DOM_VK_DOWN");
 				first = false;
 				var stop = item ? node == item : this.isBookmarkItem(node);
 				if(stop)
@@ -1282,6 +1267,22 @@ EventHandler.prototype = {
 			},
 			this
 		);
+	},
+	dispatchKeyEvent: function(target, keyName) {
+		var document = target.ownerDocument;
+		var window = document.defaultView;
+		function dispatchKeyEvent(type) {
+			var evt = document.createEvent("KeyboardEvent");
+			evt.initKeyEvent(
+				"type", true /*bubbles*/, true /*cancelable*/, window,
+				false /*ctrlKey*/, false /*altKey*/, false /*shiftKey*/, false /*metaKey*/,
+				evt[keyName], 0 /*charCode*/
+			);
+			target.dispatchEvent(evt);
+		}
+		//dispatchKeyEvent("keydown");
+		dispatchKeyEvent("keypress");
+		//dispatchKeyEvent("keyup");
 	},
 	getBookmarkText: function(mi) {
 		//~ todo: add prefs like search.title and search.url ?
