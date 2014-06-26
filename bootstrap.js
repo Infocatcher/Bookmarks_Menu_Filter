@@ -581,7 +581,7 @@ EventHandler.prototype = {
 					this._currentPopup = mp;
 				if(!filterOpened && this.pFilter in mp) {
 					filterOpened = true;
-					//this.showFilter(false, mp, mp[this.pFilter]);
+					//this.showFilter(false, mp);
 					_log("_mouseoverNode: " + (this._mouseoverNode && this._mouseoverNode.localName));
 					var submenuDelay = prefs.get("submenuDelay", 450);
 					if(
@@ -593,11 +593,11 @@ EventHandler.prototype = {
 						// Wait, may be another submenu will be opened soon
 						cancelTimer(this._showFilterTimer);
 						this._showFilterTimer = timer(function() {
-							this.showFilter(false, mp, mp[this.pFilter]);
+							this.showFilter(false, mp);
 						}, this, submenuDelay);
 					}
 					else {
-						this.showFilter(false, mp, mp[this.pFilter]);
+						this.showFilter(false, mp);
 					}
 				}
 				if(this._currentPopup && filterOpened)
@@ -1386,20 +1386,20 @@ EventHandler.prototype = {
 		cancelTimer(this._showFilterDelayTimer);
 		this._showFilterScheduled = false;
 	},
-	showFilter: function(ignoreNotFound, popup, s, _noRetry) {
+	showFilter: function(ignoreNotFound, popup, _noRetry) {
 		popup = popup || this._currentPopup;
 		if(!popup) {
 			_log("showFilter(): looks like popup is closed, nothing to do");
 			return;
 		}
-		s = s || this._filter;
+		var curFilter = popup[this.pFilter] || "";
 		var tt = this.tt;
-		//_log("showFilter : " + (popup[this.pFilter] || ""));
-		tt._value.setAttribute("value", popup[this.pFilter] || " ");
+		//_log("showFilter : " + curFilter);
+		tt._value.setAttribute("value", curFilter || " ");
 		var count = popup[this.pCount] || 0;
 		tt._count.setAttribute("value", count);
 
-		var notFound = !count && s;
+		var notFound = !count && curFilter;
 		//_log("!!! showFilter: count: " + count + ", notFound: " + notFound + ", ignore: " + ignoreNotFound);
 		if(!notFound || !ignoreNotFound)
 			this.ttSetClass("bookmarksMenuFilter-notFound", notFound);
@@ -1452,7 +1452,7 @@ EventHandler.prototype = {
 		if(y < 0 && !_noRetry) { //~ todo: first bookmark in this case only partially visible
 			this._showFilterRetryTimer = timer(function() {
 				_log("showFilter(): retry...");
-				this.showFilter(ignoreNotFound, popup, s, true);
+				this.showFilter(ignoreNotFound, popup, true);
 			}, this, 10);
 		}
 		if(trgPopup != popup || y < 0) {
