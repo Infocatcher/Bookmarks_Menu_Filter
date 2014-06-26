@@ -14,5 +14,7 @@ Allows you to filter bookmarks and history menus – just open menu and type what 
 <tr><td>Ctrl+I               </td><td>toggle match case                                                                                                 </td></tr>
 <tr><td>Ctrl+R               </td><td>toggle RegExp                                                                                                     </td></tr>
 <tr><td>Ctrl+A               </td><td>toggle "as is"                                                                                                    </td></tr>
+<tr><td>Ctrl+Z               </td><td>undo                                                                                                              </td></tr>
+<tr><td>Ctrl+Shift+Z, Ctrl+Y </td><td>redo                                                                                                              </td></tr>
 <tr><td>F1                   </td><td>show hint                                                                                                         </td></tr>
 </table>
