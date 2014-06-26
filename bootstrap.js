@@ -398,6 +398,11 @@ EventHandler.prototype = {
 	_activeNode: null,
 	_lastActiveNode: null,
 	_ignoreActivationTimer: 0,
+	undo: { // Global!
+		storage: [""],
+		limit: 50,
+		pos: undefined
+	},
 
 	init: function(reason) {
 		this.window.addEventListener("popupshowing", this, false);
@@ -599,6 +604,7 @@ EventHandler.prototype = {
 					else {
 						this.showFilter(false, mp);
 					}
+					this.updateUndoStorage(mp[this.pFilter]);
 				}
 				if(this._currentPopup && filterOpened)
 					break;
@@ -788,6 +794,13 @@ EventHandler.prototype = {
 				case "i": var toggleMatchCase = true; break;
 				case "a": var toggleAsIs      = true; break;
 				case "r": var toggleRegExp    = true; break;
+				case "y": var redo            = true; break;
+				case "z":
+					if(e.shiftKey)
+						var redo = true;
+					else
+						var undo = true;
+				break;
 				default: isOwnHotkey = false;
 			}
 		}
@@ -831,8 +844,22 @@ EventHandler.prototype = {
 			this._filter = this.togglePrefix(this._filter, "regExp");
 		else if(toggleAsIs)
 			this._filter = this.togglePrefix(this._filter, "asIs");
+		else if(undo || redo) {
+			var us = this.undo.storage;
+			var up = this.undo.pos;
+			var pos = up == undefined
+				? redo ? -1     : us.length - 2
+				: redo ? up + 1 : up - 1;
+			if(pos >= 0 && pos < us.length) {
+				this._filter = us[pos];
+				this.undo.pos = pos;
+			}
+		}
 		else if(!copy && !cut)
 			this._filter += chr;
+
+		if(!undo && !redo)
+			this.updateUndoStorage(this._filter);
 
 		this.stopEvent(e);
 		_log("keyPressHandler(): " + chr);
@@ -841,6 +868,22 @@ EventHandler.prototype = {
 			this.filterBookmarksDelay();
 		else
 			this.filterBookmarksProxy();
+	},
+	updateUndoStorage: function(newFilter) {
+		var us = this.undo.storage;
+		var up = this.undo.pos;
+		var oldFilter = up == undefined
+			? us[us.length - 1] || ""
+			: us[up];
+		if(newFilter != oldFilter) {
+			if(up != undefined) {
+				us.length = up + 1;
+				this.undo.pos = undefined;
+			}
+			us.push(newFilter);
+			while(us.length > this.undo.limit)
+				us.shift();
+		}
 	},
 	get contextMenuOpened() {
 		var curPopup = this._currentPopup;
