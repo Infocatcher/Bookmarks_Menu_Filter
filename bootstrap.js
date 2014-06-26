@@ -812,7 +812,7 @@ EventHandler.prototype = {
 		var prevFilter = this._filter;
 		if(copy || cut) {
 			_log("Hotkey: " + (copy ? "copy" : "cut"));
-			Components.classes["@mozilla.org/widget/clipboardhelper;1"]
+			prevFilter && Components.classes["@mozilla.org/widget/clipboardhelper;1"]
 				.getService(Components.interfaces.nsIClipboardHelper)
 				.copyString(prevFilter, this.window.content.document);
 		}
@@ -831,7 +831,7 @@ EventHandler.prototype = {
 			this._filter = this.togglePrefix(this._filter, "regExp");
 		else if(toggleAsIs)
 			this._filter = this.togglePrefix(this._filter, "asIs");
-		else if(!copy)
+		else if(!copy && !cut)
 			this._filter += chr;
 
 		this.stopEvent(e);
