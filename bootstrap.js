@@ -781,7 +781,7 @@ EventHandler.prototype = {
 		var chr = String.fromCharCode(e.charCode);
 		if(e.ctrlKey || e.metaKey) {
 			var isOwnHotkey = true;
-			switch(chr) {
+			switch(chr.toLowerCase()) {
 				case "x": var cut             = true; break;
 				case "c": var copy            = true; break;
 				case "v": var paste           = true; break;
