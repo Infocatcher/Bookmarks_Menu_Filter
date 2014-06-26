@@ -14,6 +14,7 @@
 `x` Correctly load default preferences in Gecko 2 and 3.<br>
 `+` Added localization in Gecko 2 - 7.<br>
 `*` Check list of opened popups for already closed to fix possible problems.<br>
+`x` Fixed hotkeys handling with pressed CapsLock.<br>
 
 ##### 0.1.0a37 (2013-11-04)
 `*` Increased default values for <em>filterMaxLevel</em> and <em>filter*Delay</em> preferences.<br>
