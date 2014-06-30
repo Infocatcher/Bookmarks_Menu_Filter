@@ -1184,7 +1184,9 @@ EventHandler.prototype = {
 					};
 					this._filterRestore.push(restoreNode);
 				}
-				var subMatcher = matcher && prefs.get("checkFoldersLabels", true) && matcher(node.getAttribute("label"))
+				var subMatcher = matcher
+					&& prefs.get("checkFoldersLabels", true)
+					&& matcher(this.getBookmarkMenuText(node))
 					? null
 					: matcher;
 
@@ -1350,7 +1352,13 @@ EventHandler.prototype = {
 		var uri = mi._placesNode && mi._placesNode.uri || mi.node && mi.node.uri;
 		uri && texts.push(uri);
 		//~ todo: get description ?
-		return texts.join("\n");
+		return this.applyReplacements(texts.join("\n"));
+	},
+	getBookmarkMenuText: function(menu) {
+		return this.applyReplacements(menu.getAttribute("label") || "");
+	},
+	applyReplacements: function(s) {
+		return s;
 	},
 
 	XULNS: "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul",
