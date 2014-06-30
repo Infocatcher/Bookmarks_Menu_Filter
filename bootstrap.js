@@ -763,12 +763,13 @@ EventHandler.prototype = {
 
 		var curFilter = this._filter;
 		var newFilter = curFilter;
+		var curFilterEmpty = !curFilter.trim();
 		var isEscape = e.keyCode == e.DOM_VK_ESCAPE;
 		if(isEscape && (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey)) {
 			_log("Escape pressed with modifier key, ignore (and allow hide popup)");
 			return; // Allow hide popup
 		}
-		if(isEscape && this.filterOpen && !curFilter) {
+		if(isEscape && this.filterOpen && curFilterEmpty) {
 			this.stopEvent(e);
 			this.hideFilter();
 			if(curPopup) {
@@ -866,7 +867,8 @@ EventHandler.prototype = {
 		if(!undo && !redo)
 			this.updateUndoStorage(newFilter);
 
-		if(!curFilter.trim() && !newFilter.trim() && this.filterOpen)
+		var newFilterEmpty = !newFilter.trim();
+		if(curFilterEmpty && newFilterEmpty && this.filterOpen)
 			changed = false;
 
 		this.stopEvent(e);
@@ -877,7 +879,7 @@ EventHandler.prototype = {
 		}
 		this._filter = newFilter;
 		this.showFilter(true /*ignoreNotFound*/); // This should be fast... show as typed
-		if(!curFilter && newFilter)
+		if(curFilterEmpty && !newFilterEmpty)
 			this.filterBookmarksDelay();
 		else
 			this.filterBookmarksProxy();
