@@ -5,6 +5,12 @@ const C_ID = Components.ID("{89e414a4-994e-44cc-9730-803b1c902f49}"),
       C_CONTRACT_ID = "@bookmarksMenuFilter/legacyLoader;1",
       C_NAME = "Bookmarks Menu Filter legacy loader";
 
+if(!String.prototype.trim) {
+	String.prototype.trim = function() {
+		return this.replace(/^\s+|\s+$/g, "");
+	};
+}
+
 // resource://gre/modules/Services.jsm
 const Services = {
 	get console() {

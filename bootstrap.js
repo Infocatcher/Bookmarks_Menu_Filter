@@ -823,6 +823,7 @@ EventHandler.prototype = {
 		}
 
 		var prevFilter = this._filter;
+		var changed = true;
 		if(copy || cut) {
 			_log("Hotkey: " + (copy ? "copy" : "cut"));
 			prevFilter && Components.classes["@mozilla.org/widget/clipboardhelper;1"]
@@ -850,21 +851,32 @@ EventHandler.prototype = {
 			var pos = up == undefined
 				? redo ? -1     : us.length - 2
 				: redo ? up + 1 : up - 1;
-			if(pos >= 0 && pos < us.length) {
+			if(pos >= 0 && pos < us.length && us[pos] != prevFilter) {
 				this._filter = us[pos];
 				this.undo.pos = pos;
+			}
+			else {
+				changed = false;
 			}
 		}
 		else if(!copy && !cut)
 			this._filter += chr;
 
+		var newFilter = this._filter;
 		if(!undo && !redo)
-			this.updateUndoStorage(this._filter);
+			this.updateUndoStorage(newFilter);
+
+		if(!prevFilter.trim() && !newFilter.trim())
+			changed = false;
 
 		this.stopEvent(e);
-		_log("keyPressHandler(): " + chr);
+		_log("keyPressHandler(): \"" + chr + "\"");
+		if(!changed) {
+			_log("keyPressHandler(): filter isn't changed");
+			return;
+		}
 		this.showFilter(true /*ignoreNotFound*/); // This should be fast... show as typed
-		if(!prevFilter && this._filter)
+		if(!prevFilter && newFilter)
 			this.filterBookmarksDelay();
 		else
 			this.filterBookmarksProxy();
