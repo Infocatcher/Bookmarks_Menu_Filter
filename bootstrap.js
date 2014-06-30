@@ -866,7 +866,7 @@ EventHandler.prototype = {
 		if(!undo && !redo)
 			this.updateUndoStorage(newFilter);
 
-		if(!curFilter.trim() && !newFilter.trim())
+		if(!curFilter.trim() && !newFilter.trim() && this.filterOpen)
 			changed = false;
 
 		this.stopEvent(e);
