@@ -6,6 +6,7 @@
 `*` - improved<br>
 
 ##### master/HEAD
+##### 0.1.0a38 (2014-06-30)
 `x` Correctly detect built-in private windows in SeaMonkey (was changed in released version).<br>
 `x` Don't handle input, if opened context menu (to not break accesskeys) (<a href="https://github.com/Infocatcher/Bookmarks_Menu_Filter/issues/4">#4</a>).<br>
 `x` Restored compatibility with Firefox 3.6 and older (nsITimer.init() doesn't accept functions).<br>
