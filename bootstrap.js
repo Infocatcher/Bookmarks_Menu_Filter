@@ -34,7 +34,7 @@ function startup(params, reason) {
 	)
 		Components.manager.addBootstrappedManifestLocation(params.installPath);
 
-	windowsObserver.init(reason);
+	bmFilter.init(reason);
 }
 function shutdown(params, reason) {
 	if(
@@ -43,14 +43,14 @@ function shutdown(params, reason) {
 	)
 		Components.manager.removeBootstrappedManifestLocation(params.installPath);
 
-	windowsObserver.destroy(reason);
+	bmFilter.destroy(reason);
 	if(reason != APP_SHUTDOWN) //?
 		destroyTimers();
 
 	_log("shutdown()");
 }
 
-var windowsObserver = {
+var bmFilter = {
 	initialized: false,
 	init: function(reason) {
 		if(this.initialized)
@@ -378,7 +378,7 @@ function EventHandler(window) {
 	this._popups = []; // All opened popups
 }
 EventHandler.prototype = {
-	wo: windowsObserver,
+	bmf: bmFilter,
 
 	_currentPopup: null,
 	_filterPopup: null,
@@ -642,7 +642,7 @@ EventHandler.prototype = {
 		window.addEventListener("popuphiding", this, false);
 		window.addEventListener("mouseover", this, true);
 		window.addEventListener("DOMMenuItemActive", this, true);
-		this.wo.loadStyles(window);
+		this.bmf.loadStyles(window);
 		_log("initInputWatcher()");
 	},
 	destroyInputWatcher: function() {
@@ -1585,7 +1585,7 @@ EventHandler.prototype = {
 		}
 	},
 	get defaultHint() {
-		return setProperty(this, "defaultHint", this.wo.getLocalized("hint"));
+		return setProperty(this, "defaultHint", this.bmf.getLocalized("hint"));
 	},
 	toggleHint: function(show) {
 		var tt = this.tt;
