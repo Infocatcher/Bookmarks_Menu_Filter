@@ -1083,6 +1083,7 @@ EventHandler.prototype = {
 		var flags = this.parsePrefixes(filter);
 		if(flags.has)
 			filter = flags.filter;
+		filter = this.bmf.applyReplacements(filter);
 
 		this.showFilterFlags(flags);
 
