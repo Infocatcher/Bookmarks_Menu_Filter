@@ -16,6 +16,7 @@
 `*` Check list of opened popups for already closed to fix possible problems.<br>
 `x` Fixed hotkeys handling with pressed CapsLock.<br>
 `+` Added undo/redo ability (Ctrl+Z and Ctrl+Shift+Z, Ctrl+Y) (<a href="https://github.com/Infocatcher/Bookmarks_Menu_Filter/issues/5">#5</a>).<br>
+`+` Added support for replacement rules to find hard-to-input symbols (<em>extensions.bookmarksMenuFilter.replacements</em> preference) (<a href="https://github.com/Infocatcher/Bookmarks_Menu_Filter/issues/6">#6</a>).<br>
 
 ##### 0.1.0a37 (2013-11-04)
 `*` Increased default values for <em>filterMaxLevel</em> and <em>filter*Delay</em> preferences.<br>
@@ -29,7 +30,7 @@
 `x` Destroy popup handler, if no opened popup or popup is already closed.<br>
 `*` Pass source document to nsIClipboardHelper.copyString() for per-window private browsing.<br>
 `+` Detect private browser windows in latest SeaMonkey (<a href="https://github.com/Infocatcher/Bookmarks_Menu_Filter/issues/1">#1</a>).<br>
-`*` Implemented asynchronous filtration to better work with large bookmarks number (<a href="https://github.com/Infocatcher/Bookmarks_Menu_Filter/issues/2">#2</a>).<br> 
+`*` Implemented asynchronous filtration to better work with large bookmarks number (<a href="https://github.com/Infocatcher/Bookmarks_Menu_Filter/issues/2">#2</a>).<br>
 `+` Added support for <a href="https://addons.mozilla.org/addon/history-submenus-2/">History Submenus Ⅱ</a> extension.<br>
 
 ##### 0.1.0a35 (2013-01-06)

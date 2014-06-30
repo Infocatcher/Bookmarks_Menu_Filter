@@ -16,6 +16,7 @@
 `*` Список открытых меню теперь проверяется на наличие уже закрытых для исправления возможных проблем.<br>
 `x` Исправлена обработка сочетаний клавиш при нажатом CapsLock.<br>
 `+` Добавлена возможность отмены/повторения (Ctrl+Z и Ctrl+Shift+Z, Ctrl+Y) (<a href="https://github.com/Infocatcher/Bookmarks_Menu_Filter/issues/5">#5</a>).<br>
+`+` Добавлена поддержка правил замены для поиска трудных для ввода символов (настройка <em>extensions.bookmarksMenuFilter.replacements</em>) (<a href="https://github.com/Infocatcher/Bookmarks_Menu_Filter/issues/6">#6</a>).<br>
 
 ##### 0.1.0a37 (2013-11-04)
 `*` Увеличены значения по умолчанию для настроек <em>filterMaxLevel</em> и <em>filter*Delay</em>.<br>
@@ -29,7 +30,7 @@
 `x` Обработчик всплывающих меню завершается, если открытое меню отсутствует или уже закрыто.<br>
 `*` Теперь в функцию nsIClipboardHelper.copyString() передается документ-источник для пооконного приватного режима.<br>
 `+` Добавлено определение приватных окон в последних версиях SeaMonkey (<a href="https://github.com/Infocatcher/Bookmarks_Menu_Filter/issues/1">#1</a>).<br>
-`*` Реализована асинхронная фильтрация для улучшения обработки большого количества закладок (<a href="https://github.com/Infocatcher/Bookmarks_Menu_Filter/issues/2">#2</a>).<br> 
+`*` Реализована асинхронная фильтрация для улучшения обработки большого количества закладок (<a href="https://github.com/Infocatcher/Bookmarks_Menu_Filter/issues/2">#2</a>).<br>
 `+` Добавлена поддержка расширения <a href="https://addons.mozilla.org/addon/history-submenus-2/">History Submenus Ⅱ</a>.<br>
 
 ##### 0.1.0a35 (2013-01-06)
