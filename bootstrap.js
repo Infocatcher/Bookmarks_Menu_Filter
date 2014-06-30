@@ -761,12 +761,14 @@ EventHandler.prototype = {
 		if(this.contextMenuOpened)
 			return;
 
+		var curFilter = this._filter;
+		var newFilter = curFilter;
 		var isEscape = e.keyCode == e.DOM_VK_ESCAPE;
 		if(isEscape && (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey)) {
 			_log("Escape pressed with modifier key, ignore (and allow hide popup)");
 			return; // Allow hide popup
 		}
-		if(isEscape && this.filterOpen && !this._filter) {
+		if(isEscape && this.filterOpen && !curFilter) {
 			this.stopEvent(e);
 			this.hideFilter();
 			if(curPopup) {
@@ -806,7 +808,7 @@ EventHandler.prototype = {
 		}
 
 		var isBackspace = e.keyCode == e.DOM_VK_BACK_SPACE;
-		var resetFilter = (isEscape || cut) && this._filter;
+		var resetFilter = (isEscape || cut) && curFilter;
 		if(
 			!isBackspace
 			&& !resetFilter
@@ -822,37 +824,36 @@ EventHandler.prototype = {
 			return;
 		}
 
-		var prevFilter = this._filter;
 		var changed = true;
 		if(copy || cut) {
 			_log("Hotkey: " + (copy ? "copy" : "cut"));
-			prevFilter && Components.classes["@mozilla.org/widget/clipboardhelper;1"]
+			curFilter && Components.classes["@mozilla.org/widget/clipboardhelper;1"]
 				.getService(Components.interfaces.nsIClipboardHelper)
-				.copyString(prevFilter, this.window.content.document);
+				.copyString(curFilter, this.window.content.document);
 		}
 
 		if(resetFilter)
-			this._filter = "";
+			newFilter = "";
 		else if(paste)
-			this._filter += this.window.readFromClipboard && this.window.readFromClipboard() || "";
+			newFilter += this.window.readFromClipboard && this.window.readFromClipboard() || "";
 		else if(isBackspace && (e.ctrlKey || e.metaKey))
-			this._filter = this._filter.replace(this.delLastWordPattern, "");
+			newFilter = newFilter.replace(this.delLastWordPattern, "");
 		else if(isBackspace)
-			this._filter = this._filter.slice(0, -1);
+			newFilter = newFilter.slice(0, -1);
 		else if(toggleMatchCase)
-			this._filter = this.togglePrefix(this._filter, "matchCase");
+			newFilter = this.togglePrefix(newFilter, "matchCase");
 		else if(toggleRegExp)
-			this._filter = this.togglePrefix(this._filter, "regExp");
+			newFilter = this.togglePrefix(newFilter, "regExp");
 		else if(toggleAsIs)
-			this._filter = this.togglePrefix(this._filter, "asIs");
+			newFilter = this.togglePrefix(newFilter, "asIs");
 		else if(undo || redo) {
 			var us = this.undo.storage;
 			var up = this.undo.pos;
 			var pos = up == undefined
 				? redo ? -1     : us.length - 2
 				: redo ? up + 1 : up - 1;
-			if(pos >= 0 && pos < us.length && us[pos] != prevFilter) {
-				this._filter = us[pos];
+			if(pos >= 0 && pos < us.length && us[pos] != curFilter) {
+				newFilter = us[pos];
 				this.undo.pos = pos;
 			}
 			else {
@@ -860,13 +861,12 @@ EventHandler.prototype = {
 			}
 		}
 		else if(!copy && !cut)
-			this._filter += chr;
+			newFilter += chr;
 
-		var newFilter = this._filter;
 		if(!undo && !redo)
 			this.updateUndoStorage(newFilter);
 
-		if(!prevFilter.trim() && !newFilter.trim())
+		if(!curFilter.trim() && !newFilter.trim())
 			changed = false;
 
 		this.stopEvent(e);
@@ -875,8 +875,9 @@ EventHandler.prototype = {
 			_log("keyPressHandler(): filter isn't changed");
 			return;
 		}
+		this._filter = newFilter;
 		this.showFilter(true /*ignoreNotFound*/); // This should be fast... show as typed
-		if(!prevFilter && newFilter)
+		if(!curFilter && newFilter)
 			this.filterBookmarksDelay();
 		else
 			this.filterBookmarksProxy();
