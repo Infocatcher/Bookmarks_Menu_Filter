@@ -1069,7 +1069,7 @@ EventHandler.prototype = {
 				}
 			}
 			else { // Default: treat spaces as "and"
-				filter = filter.replace(/^\s+|\s+$/g, "");
+				filter = filter.trim();
 				if(!flags.matchCase)
 					filter = filter.toLowerCase();
 				var tokens = filter.split(/\s+/);
