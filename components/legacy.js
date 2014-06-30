@@ -11,6 +11,21 @@ if(!String.prototype.trim) {
 	};
 }
 
+if(!("JSON" in this)) {
+	var nativeJSON = Components.classes["@mozilla.org/dom/json;1"]
+		.createInstance(Components.interfaces.nsIJSON);
+	this.JSON = {
+		parse: function(s) {
+			return nativeJSON.decode(s);
+		},
+		stringify: function(o) {
+			if(arguments.length > 1)
+				throw new Error("nsIJSON.encode() supports only one argument");
+			return nativeJSON.encode(o);
+		}
+	};
+}
+
 // resource://gre/modules/Services.jsm
 const Services = {
 	get console() {

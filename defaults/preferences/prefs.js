@@ -18,3 +18,6 @@ pref("extensions.bookmarksMenuFilter.submenuDelay", 450);
 pref("extensions.bookmarksMenuFilter.prefix.matchCase", "-");
 pref("extensions.bookmarksMenuFilter.prefix.regExp", "/");
 pref("extensions.bookmarksMenuFilter.prefix.asIs", "\" ' =");
+
+// JSON string with replacements, example: '{"é": "e", "ê": "e"}' (in lower case!)
+pref("extensions.bookmarksMenuFilter.replacements", "{}");

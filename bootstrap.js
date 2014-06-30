@@ -94,13 +94,16 @@ var bmFilter = {
 		else if(topic == "domwindowclosed")
 			this.destroyWindow(subject, WINDOW_CLOSED);
 	},
-
 	handleEvent: function(e) {
 		if(e.type == "load") {
 			var window = e.originalTarget.defaultView;
 			window.removeEventListener("load", this, false);
 			this.initWindow(window, WINDOW_LOADED);
 		}
+	},
+	prefChanged: function(pName, pVal) {
+		if(pName == "replacements")
+			this.initReplacements();
 	},
 
 	_currentId: -1,
@@ -163,6 +166,47 @@ var bmFilter = {
 		var loc = window.location.href;
 		return loc == "chrome://browser/content/browser.xul"
 			|| loc == "chrome://navigator/content/navigator.xul";
+	},
+
+	applyReplacements: function(s) {
+		return this.initReplacements().apply(this, arguments);
+	},
+	initReplacements: function() {
+		_log("initReplacements()");
+		var replacements = this._replacements = [];
+		try {
+			var data = JSON.parse(prefs.get("replacements", "{}"));
+		}
+		catch(e) {
+			Components.utils.reportError(e);
+		}
+		function appendFilter(find, replacement) {
+			try {
+				replacements.push([new RegExp(find, "g"), replacement]);
+			}
+			catch(e) {
+				Components.utils.reportError(e);
+			}
+		}
+		if(data) for(var find in data) {
+			var replacement = data[find];
+			appendFilter(find, replacement);
+			var findUpper = find.toUpperCase();
+			if(findUpper != find)
+				appendFilter(findUpper, replacement.toUpperCase());
+		}
+		return this.applyReplacements = replacements.length
+			? this._applyReplacements
+			: this._applyReplacementsDummy;
+	},
+	_applyReplacements: function(s) {
+		this._replacements.forEach(function(o) {
+			s = s.replace(o[0], o[1]);
+		});
+		return s;
+	},
+	_applyReplacementsDummy: function(s) {
+		return s;
 	},
 
 	_stylesLoaded: false,
@@ -320,8 +364,12 @@ var prefs = {
 		Services.prefs.removeObserver(this.ns, this);
 	},
 	observe: function(subject, topic, pName) {
-		if(topic == "nsPref:changed")
-			this._cache[pName.substr(this.ns.length)] = this.getPref(pName);
+		if(topic != "nsPref:changed")
+			return;
+		var shortName = pName.substr(this.ns.length);
+		var pVal = this.getPref(pName);
+		this._cache[shortName] = pVal;
+		bmFilter.prefChanged(shortName, pVal);
 	},
 
 	loadDefaultPrefs: function() {
@@ -1352,13 +1400,10 @@ EventHandler.prototype = {
 		var uri = mi._placesNode && mi._placesNode.uri || mi.node && mi.node.uri;
 		uri && texts.push(uri);
 		//~ todo: get description ?
-		return this.applyReplacements(texts.join("\n"));
+		return this.bmf.applyReplacements(texts.join("\n"));
 	},
 	getBookmarkMenuText: function(menu) {
-		return this.applyReplacements(menu.getAttribute("label") || "");
-	},
-	applyReplacements: function(s) {
-		return s;
+		return this.bmf.applyReplacements(menu.getAttribute("label") || "");
 	},
 
 	XULNS: "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul",
