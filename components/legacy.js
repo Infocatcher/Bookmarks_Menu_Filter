@@ -93,14 +93,13 @@ const ADDON_UPGRADE   = 7;
 const ADDON_DOWNGRADE = 8;
 
 const legacyLoader = {
-	_initialized: false,
+	startup: function() {
+		// Preferences may be not yet loaded, wait
+		Services.obs.addObserver(this, "profile-after-change", false);
+	},
 	init: function() {
-		if(this._initialized)
-			return;
-		this._initialized = true;
-
+		Services.obs.removeObserver(this, "profile-after-change");
 		Services.obs.addObserver(this, "quit-application-granted", false);
-
 		var file = new Error().fileName.replace(/(?:\/+[^\/]+){2}$/, "") + "/bootstrap.js";
 		Services.scriptloader.loadSubScript(file);
 		startup(null, APP_STARTUP);
@@ -110,7 +109,9 @@ const legacyLoader = {
 		shutdown(null, APP_SHUTDOWN);
 	},
 	observe: function(subject, topic, data) {
-		if(topic == "quit-application-granted")
+		if(topic == "profile-after-change")
+			this.init();
+		else if(topic == "quit-application-granted")
 			this.destroy();
 	}
 };
@@ -128,7 +129,7 @@ const factory = {
 	// nsIObserver interface implementation
 	observe: function(subject, topic, data) {
 		if(topic == "app-startup")
-			legacyLoader.init();
+			legacyLoader.startup();
 	},
 	// nsISupports interface implementation
 	QueryInterface: function(iid) {
