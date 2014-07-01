@@ -106,7 +106,7 @@ const legacyLoader = {
 		startup(null, APP_STARTUP);
 	},
 	destroy: function() {
-		this.oSvc.removeObserver(this, "quit-application-granted");
+		Services.obs.removeObserver(this, "quit-application-granted");
 		shutdown(null, APP_SHUTDOWN);
 	},
 	observe: function(subject, topic, data) {
