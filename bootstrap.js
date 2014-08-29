@@ -683,10 +683,7 @@ EventHandler.prototype = {
 		var doc = node.ownerDocument;
 		if(doc && "contains" in doc) // Firefox 9+
 			return doc.contains(node);
-		for(var parent = node.parentNode; parent != doc; parent = parent.parentNode)
-			if(!parent)
-				return false;
-		return true;
+		return doc && !!(doc.compareDocumentPosition(node) & doc.DOCUMENT_POSITION_CONTAINED_BY);
 	},
 
 	initInputWatcher: function() {
