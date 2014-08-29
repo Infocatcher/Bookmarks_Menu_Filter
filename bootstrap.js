@@ -667,12 +667,8 @@ EventHandler.prototype = {
 	_checkForClosedPopupsTimer: 0,
 	checkForClosedPopups: function() {
 		var closedPopups = this._popups.filter(function(popup) {
-			var doc = popup.ownerDocument;
-			for(var parent = popup.parentNode; parent != doc; parent = parent.parentNode)
-				if(!parent) // Removed from document
-					return true;
-			return popup.state == "closed";
-		});
+			return !this.inDocument(popup) || popup.state == "closed";
+		}, this);
 		if(!closedPopups.length) {
 			_log("checkForClosedPopups(): OK");
 			return;
@@ -682,6 +678,15 @@ EventHandler.prototype = {
 			_log("*** checkForClosedPopups(): found closed or removed popup in this._popups: " + label);
 			this.popupHidingHandler({ target: popup }, true);
 		}, this);
+	},
+	inDocument: function(node) {
+		var doc = node.ownerDocument;
+		if(doc && "contains" in doc) // Firefox 9+
+			return doc.contains(node);
+		for(var parent = node.parentNode; parent != doc; parent = parent.parentNode)
+			if(!parent)
+				return false;
+		return true;
 	},
 
 	initInputWatcher: function() {
