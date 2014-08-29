@@ -667,6 +667,10 @@ EventHandler.prototype = {
 	_checkForClosedPopupsTimer: 0,
 	checkForClosedPopups: function() {
 		var closedPopups = this._popups.filter(function(popup) {
+			var doc = popup.ownerDocument;
+			for(var parent = popup.parentNode; parent != doc; parent = parent.parentNode)
+				if(!parent) // Removed from document
+					return true;
 			return popup.state == "closed";
 		});
 		if(!closedPopups.length) {
@@ -675,7 +679,7 @@ EventHandler.prototype = {
 		}
 		closedPopups.forEach(function(popup) {
 			var label = popup.parentNode && popup.parentNode.getAttribute("label");
-			_log("*** checkForClosedPopups(): found closed popup in this._popups: " + label);
+			_log("*** checkForClosedPopups(): found closed or removed popup in this._popups: " + label);
 			this.popupHidingHandler({ target: popup }, true);
 		}, this);
 	},
