@@ -1421,7 +1421,9 @@ EventHandler.prototype = {
 			.documentElement;
 	},
 	get tt() {
-		var tt = this._tt = this.window.document.documentElement.appendChild(this.parseXULFromString('\
+		var document = this.window.document;
+		var popupSet = document.getElementById("mainPopupSet") || document.documentElement;
+		var tt = this._tt = popupSet.appendChild(this.parseXULFromString('\
 			<tooltip xmlns="' + this.XULNS + '"\
 				id="bookmarksMenuFilter"\
 				noautohide="true"\
