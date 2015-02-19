@@ -82,7 +82,6 @@ var bmFilter = {
 			_log("!!! Not yet destroyed handler #" + p + " " + eh.window.location);
 			eh.destroy(reason);
 		}
-		this._windows = { __proto__: null };
 		this._handlers = { __proto__: null };
 	},
 
@@ -105,13 +104,10 @@ var bmFilter = {
 	},
 
 	_currentId: -1,
-	_windows: { __proto__: null },
 	_handlers: { __proto__: null },
-	getWindowIndex: function(win) {
-		var ws = this._windows;
-		for(var p in ws)
-			if(ws[p] === win)
-				return p;
+	getWindowIndex: function(window) {
+		if("_bookmarksMenuFilterId" in window)
+			return window._bookmarksMenuFilterId;
 		return -1;
 	},
 
@@ -128,7 +124,7 @@ var bmFilter = {
 		eh.init(reason);
 		var i = ++this._currentId;
 		this._handlers[i] = eh;
-		this._windows[i] = window;
+		window._bookmarksMenuFilterId = i;
 		//_log("initWindow() #" + i + " " + window.location);
 	},
 	destroyWindow: function(window, reason) {
@@ -141,7 +137,7 @@ var bmFilter = {
 		var eh = this._handlers[indx];
 		eh.destroy(reason);
 		delete this._handlers[indx];
-		delete this._windows[indx];
+		delete window._bookmarksMenuFilterId;
 		_log("destroyWindow() #" + indx + " " + window.location);
 	},
 	get isSeaMonkey() {
