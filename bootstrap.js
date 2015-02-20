@@ -106,6 +106,9 @@ var bmFilter = {
 				this.initWindow(window, WINDOW_LOADED);
 			break;
 			case "popupshowing":
+				var popup = e.target;
+				if(!this.isPlacesPopup(popup))
+					return;
 				var window = e.currentTarget;
 				window.removeEventListener(e.type, this, true);
 				var indx = this.getWindowIndex(window);
@@ -117,6 +120,11 @@ var bmFilter = {
 				this._handlers[i] = eh;
 				window._bookmarksMenuFilterId = i;
 		}
+	},
+	isPlacesPopup: function(node) {
+		return node.getAttribute("placespopup") == "true"
+			|| node.getAttribute("type") == "places"
+			|| node.getAttribute("context") == "placesContext"; // Mac OS
 	},
 	prefChanged: function(pName, pVal) {
 		if(pName == "replacements")

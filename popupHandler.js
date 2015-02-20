@@ -1306,9 +1306,7 @@ PopupHandler.prototype = {
 		return cs.display != "none" && cs.visibility != "collapse";
 	},
 	isPlacesPopup: function(node) {
-		return node.getAttribute("placespopup") == "true"
-			|| node.getAttribute("type") == "places"
-			|| node.getAttribute("context") == "placesContext"; // Mac OS
+		return this.bmf.isPlacesPopup(node);
 	},
 	isBookmarkItem: function(node) {
 		// "history-submenu" - https://addons.mozilla.org/addon/history-submenus-2/
