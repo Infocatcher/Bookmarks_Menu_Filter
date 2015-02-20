@@ -8,11 +8,11 @@ var platformVersion;
 if(!("Services" in this))
 	Components.utils.import("resource://gre/modules/Services.jsm");
 
-this.__defineGetter__("EventHandler", function() {
-	delete this.EventHandler;
+this.__defineGetter__("PopupHandler", function() {
+	delete this.PopupHandler;
 	_log("Load popupHandler.js");
 	Services.scriptloader.loadSubScript(rootURI + "popupHandler.js", this, "UTF-8");
-	return EventHandler;
+	return PopupHandler;
 });
 
 function install(params, reason) {
@@ -127,7 +127,7 @@ var bmFilter = {
 		var indx = this.getWindowIndex(window);
 		if(indx != -1) // Window already initialized
 			return;
-		var eh = new EventHandler(window);
+		var eh = new PopupHandler(window);
 		eh.init(reason);
 		var i = ++this._currentId;
 		this._handlers[i] = eh;
@@ -284,7 +284,7 @@ var bmFilter = {
 				.bookmarksMenuFilter-invalidRegExp #bookmarksMenuFilter-flags {\n\
 					color: red !important;\n\
 				}\n\
-				[' + EventHandler.prototype.attrHidden + '="true"] {\n\
+				[' + PopupHandler.prototype.attrHidden + '="true"] {\n\
 					display: none !important;\n\
 				}' + (
 					hasBoxShadow

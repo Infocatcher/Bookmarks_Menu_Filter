@@ -1,8 +1,8 @@
-function EventHandler(window) {
+function PopupHandler(window) {
 	this.window = window;
 	this._popups = []; // All opened popups
 }
-EventHandler.prototype = {
+PopupHandler.prototype = {
 	bmf: bmFilter,
 
 	_currentPopup: null,
@@ -52,7 +52,7 @@ EventHandler.prototype = {
 				delete this._tt;
 			}
 		}
-		_log("EventHandler.destroy() " + window.location);
+		_log("PopupHandler.destroy() " + window.location);
 	},
 	handleEvent: function(e) {
 		switch(e.type) {
