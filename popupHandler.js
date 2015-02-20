@@ -1,6 +1,7 @@
 function PopupHandler(window) {
 	this.window = window;
 	this._popups = []; // All opened popups
+	this.init();
 }
 PopupHandler.prototype = {
 	bmf: bmFilter,
@@ -29,7 +30,7 @@ PopupHandler.prototype = {
 		pos: undefined
 	},
 
-	init: function(reason) {
+	init: function() {
 		this.window.addEventListener("popupshowing", this, false);
 	},
 	destroy: function(reason) {

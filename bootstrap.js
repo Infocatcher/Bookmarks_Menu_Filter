@@ -114,10 +114,8 @@ var bmFilter = {
 				var indx = this.getWindowIndex(window);
 				if(indx != -1) // Window already initialized
 					return;
-				var eh = new PopupHandler(window);
-				eh.init();
 				var i = ++this._currentId;
-				this._handlers[i] = eh;
+				this._handlers[i] = new PopupHandler(window);
 				window._bookmarksMenuFilterId = i;
 		}
 	},
