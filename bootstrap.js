@@ -99,10 +99,23 @@ var bmFilter = {
 			this.destroyWindow(subject, WINDOW_CLOSED);
 	},
 	handleEvent: function(e) {
-		if(e.type == "load") {
-			var window = e.currentTarget;
-			window.removeEventListener("load", this, false);
-			this.initWindow(window, WINDOW_LOADED);
+		switch(e.type) {
+			case "load":
+				var window = e.currentTarget;
+				window.removeEventListener("load", this, false);
+				this.initWindow(window, WINDOW_LOADED);
+			break;
+			case "popupshowing":
+				var window = e.currentTarget;
+				window.removeEventListener(e.type, this, true);
+				var indx = this.getWindowIndex(window);
+				if(indx != -1) // Window already initialized
+					return;
+				var eh = new PopupHandler(window);
+				eh.init();
+				var i = ++this._currentId;
+				this._handlers[i] = eh;
+				window._bookmarksMenuFilterId = i;
 		}
 	},
 	prefChanged: function(pName, pVal) {
@@ -124,20 +137,14 @@ var bmFilter = {
 				return;
 			prefs.delayedInit();
 		}
-		var indx = this.getWindowIndex(window);
-		if(indx != -1) // Window already initialized
-			return;
-		var eh = new PopupHandler(window);
-		eh.init(reason);
-		var i = ++this._currentId;
-		this._handlers[i] = eh;
-		window._bookmarksMenuFilterId = i;
+		window.addEventListener("popupshowing", this, true);
 		//_log("initWindow() #" + i + " " + window.location);
 	},
 	destroyWindow: function(window, reason) {
 		window.removeEventListener("load", this, false); // Window can be closed before "load" event
 		if(reason == WINDOW_CLOSED && !this.isTargetWindow(window))
 			return;
+		window.removeEventListener("popupshowing", this, true);
 		var indx = this.getWindowIndex(window);
 		if(indx == -1) // Nothing to destroy
 			return;
