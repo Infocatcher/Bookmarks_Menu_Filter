@@ -100,24 +100,27 @@ var bmFilter = {
 	},
 	handleEvent: function(e) {
 		switch(e.type) {
-			case "load":
-				var window = e.currentTarget;
-				window.removeEventListener("load", this, false);
-				this.initWindow(window, WINDOW_LOADED);
-			break;
-			case "popupshowing":
-				var popup = e.target;
-				if(!this.isPlacesPopup(popup))
-					return;
-				var window = e.currentTarget;
-				window.removeEventListener(e.type, this, true);
-				var indx = this.getWindowIndex(window);
-				if(indx != -1) // Window already initialized
-					return;
-				var i = ++this._currentId;
-				this._handlers[i] = new PopupHandler(window);
-				window._bookmarksMenuFilterId = i;
+			case "load":         this.loadHandler(e);         break;
+			case "popupshowing": this.popupShowingHandler(e);
 		}
+	},
+	loadHandler: function(e) {
+		var window = e.currentTarget;
+		window.removeEventListener("load", this, false);
+		this.initWindow(window, WINDOW_LOADED);
+	},
+	popupShowingHandler: function(e) {
+		var popup = e.target;
+		if(!this.isPlacesPopup(popup))
+			return;
+		var window = e.currentTarget;
+		window.removeEventListener(e.type, this, true);
+		var indx = this.getWindowIndex(window);
+		if(indx != -1) // Window already initialized
+			return;
+		var i = ++this._currentId;
+		this._handlers[i] = new PopupHandler(window);
+		window._bookmarksMenuFilterId = i;
 	},
 	isPlacesPopup: function(node) {
 		return node.getAttribute("placespopup") == "true"
