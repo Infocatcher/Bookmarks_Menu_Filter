@@ -6,6 +6,10 @@
 `*` - improved<br>
 
 ##### master/HEAD
+`x` Correctly handle already deleted menus.<br>
+`*` Improved startup performance: code around menus handling was moved into lazily loaded separate file (<a href="https://github.com/Infocatcher/Bookmarks_Menu_Filter/issues/7">#7</a>).<br>
+`*` Improved startup performance: utilities functions was moved into lazily loaded separate file (<a href="https://github.com/Infocatcher/Bookmarks_Menu_Filter/issues/8">#8</a>).<br>
+
 ##### 0.1.0a38 (2014-06-30)
 `x` Correctly detect built-in private windows in SeaMonkey (was changed in released version).<br>
 `x` Don't handle input, if opened context menu (to not break accesskeys) (<a href="https://github.com/Infocatcher/Bookmarks_Menu_Filter/issues/4">#4</a>).<br>
