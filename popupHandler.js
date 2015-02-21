@@ -274,7 +274,7 @@ PopupHandler.prototype = {
 		window.addEventListener("popuphiding", this, false);
 		window.addEventListener("mouseover", this, true);
 		window.addEventListener("DOMMenuItemActive", this, true);
-		this.bmf.loadStyles(window);
+		this.bmf.ut.loadStyles(window);
 		_log("initInputWatcher()");
 	},
 	destroyInputWatcher: function() {
@@ -667,7 +667,7 @@ PopupHandler.prototype = {
 		var flags = this.parsePrefixes(filter);
 		if(flags.has)
 			filter = flags.filter;
-		filter = this.bmf.applyReplacements(filter);
+		filter = this.bmf.ut.applyReplacements(filter);
 
 		this.showFilterFlags(flags);
 
@@ -985,10 +985,10 @@ PopupHandler.prototype = {
 		var uri = mi._placesNode && mi._placesNode.uri || mi.node && mi.node.uri;
 		uri && texts.push(uri);
 		//~ todo: get description ?
-		return this.bmf.applyReplacements(texts.join("\n"));
+		return this.bmf.ut.applyReplacements(texts.join("\n"));
 	},
 	getBookmarkMenuText: function(menu) {
-		return this.bmf.applyReplacements(menu.getAttribute("label") || "");
+		return this.bmf.ut.applyReplacements(menu.getAttribute("label") || "");
 	},
 
 	XULNS: "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul",
@@ -1217,7 +1217,7 @@ PopupHandler.prototype = {
 		}
 	},
 	get defaultHint() {
-		return setProperty(this, "defaultHint", this.bmf.getLocalized("hint"));
+		return setProperty(this, "defaultHint", this.bmf.ut.getLocalized("hint"));
 	},
 	toggleHint: function(show) {
 		var tt = this.tt;
