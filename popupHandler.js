@@ -1012,7 +1012,7 @@ PopupHandler.prototype = {
 				<vbox id="bookmarksMenuFilter-tooltipBox" flex="1">\
 					<hbox id="bookmarksMenuFilter-filterBox" align="center" flex="1">\
 						<label id="bookmarksMenuFilter-value" flex="1" crop="center" />\
-						<label id="bookmarksMenuFilter-flags" />\
+						<label id="bookmarksMenuFilter-flags" hidden="true" />\
 						<label id="bookmarksMenuFilter-count" />\
 					</hbox>\
 					<description id="bookmarksMenuFilter-hint" flex="1" hidden="true"></description>\
