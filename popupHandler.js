@@ -274,7 +274,6 @@ PopupHandler.prototype = {
 		window.addEventListener("popuphiding", this, false);
 		window.addEventListener("mouseover", this, true);
 		window.addEventListener("DOMMenuItemActive", this, true);
-		this.bmf.ut.loadStyles(window);
 		_log("initInputWatcher()");
 	},
 	destroyInputWatcher: function() {
@@ -999,7 +998,9 @@ PopupHandler.prototype = {
 			.documentElement;
 	},
 	get tt() {
-		var document = this.window.document;
+		var window = this.window;
+		this.bmf.ut.loadStyles(window);
+		var document = window.document;
 		var popupSet = document.getElementById("mainPopupSet") || document.documentElement;
 		var tt = this._tt = popupSet.appendChild(this.parseXULFromString('\
 			<tooltip xmlns="' + this.XULNS + '"\
