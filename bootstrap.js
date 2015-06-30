@@ -292,15 +292,15 @@ var prefs = {
 var _timers = { __proto__: null };
 var _timersCounter = 0;
 function timer(callback, context, delay, args) {
+	var Timer = timer._Timer || (timer._Timer = Components.Constructor("@mozilla.org/timer;1", "nsITimer"));
 	var id = ++_timersCounter;
-	var timer = _timers[id] = Components.classes["@mozilla.org/timer;1"]
-		.createInstance(Components.interfaces.nsITimer);
-	timer.init({
+	var tmr = _timers[id] = new Timer();
+	tmr.init({
 		observe: function(subject, topic, data) {
 			delete _timers[id];
 			callback.apply(context, args);
 		}
-	}, delay || 0, timer.TYPE_ONE_SHOT);
+	}, delay || 0, tmr.TYPE_ONE_SHOT);
 	return id;
 }
 function cancelTimer(id) {
