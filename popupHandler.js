@@ -1110,6 +1110,11 @@ PopupHandler.prototype = {
 		var trgPopup = this._filterPopup;
 		this._filterPopup = popup;
 
+		if(this._hideFilterTimer) {
+			this.window.clearTimeout(this._hideFilterTimer);
+			this._hideFilterTimer = 0;
+		}
+
 		if(platformVersion < 2) {
 			if(
 				tt.boxObject.width != w
@@ -1200,13 +1205,15 @@ PopupHandler.prototype = {
 	updateFilterCount: function() {
 		this.tt._count.setAttribute("value", this._lastCount || 0);
 	},
+	_hideFilterTimer: 0,
 	hideFilter: function() {
 		_log("hideFilter()");
 		//this.tt.realHidePopup();
 		// May work wrong without delay in Firefox 3.6: Alt, Alt -> menus closes, but not tooltip
-		this.window.setTimeout(function(tt) {
-			tt.realHidePopup();
-		}, 0, this.tt);
+		this._hideFilterTimer = this.window.setTimeout(function(_this) {
+			_this._hideFilterTimer = 0;
+			_this.tt.realHidePopup();
+		}, 0, this);
 		this.stopFilter();
 	},
 	showFilterFlags: function(flags) {
