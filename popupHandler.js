@@ -459,9 +459,12 @@ PopupHandler.prototype = {
 		var changed = true;
 		if(copy || cut) {
 			_log("Hotkey: " + (copy ? "copy" : "cut"));
+			// Note: document argument was removed in Firefox 41+
+			// see https://bugzilla.mozilla.org/show_bug.cgi?id=1166840
+			var srcDoc = this.window.content && this.window.content.document || this.window.document;
 			curFilter && Components.classes["@mozilla.org/widget/clipboardhelper;1"]
 				.getService(Components.interfaces.nsIClipboardHelper)
-				.copyString(curFilter, this.window.content.document);
+				.copyString(curFilter, srcDoc);
 		}
 
 		if(resetFilter)
