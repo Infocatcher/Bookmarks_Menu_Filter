@@ -1030,6 +1030,7 @@ PopupHandler.prototype = {
 		};
 		var _this = this;
 		tt.stop = function() {
+			this.realHidePopup(); // Force hide even if something went wrong
 			if(!_this._hasInputWatcher)
 				return;
 			// Wrong things may happens... so user should be able to stop all operations
