@@ -1032,7 +1032,7 @@ PopupHandler.prototype = {
 		tt.stop = function() {
 			if(!_this._hasInputWatcher)
 				return;
-			// Wrong things may happens... so yser should be able to stop all operations
+			// Wrong things may happens... so user should be able to stop all operations
 			_log("Click on tooltip => destroyInputWatcher()");
 			_this.destroyInputWatcher();
 		};
