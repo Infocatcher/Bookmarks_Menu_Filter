@@ -794,7 +794,7 @@ PopupHandler.prototype = {
 					//	++this._lastCount % 10 == 0
 					//	&& popup == this._filterPopup
 					//)
-					//	this.updateFilterCount();
+					//	this.tt._count.value = this._lastCount || 0;
 				}
 				//~ todo: implement linear mode ?
 			}
@@ -1098,9 +1098,9 @@ PopupHandler.prototype = {
 		var curFilter = popup[this.pFilter] || "";
 		var tt = this.tt;
 		//_log("showFilter : " + curFilter);
-		tt._value.setAttribute("value", curFilter || " ");
+		tt._value.value = curFilter || " ";
 		var count = popup[this.pCount] || 0;
-		tt._count.setAttribute("value", count);
+		tt._count.value = count;
 
 		var notFound = !count && curFilter;
 		//_log("!!! showFilter: count: " + count + ", notFound: " + notFound + ", ignore: " + ignoreNotFound);
@@ -1203,9 +1203,6 @@ PopupHandler.prototype = {
 		//	tt.sizeTo(w, tt.boxObject.height);
 		//}
 	},
-	updateFilterCount: function() {
-		this.tt._count.setAttribute("value", this._lastCount || 0);
-	},
 	_hideFilterTimer: 0,
 	hideFilter: function() {
 		_log("hideFilter()");
@@ -1227,8 +1224,8 @@ PopupHandler.prototype = {
 			flagsStr = "i\u2260I"; // "not equal to" symbol
 
 		var f = this.tt._flags;
-		if(f.getAttribute("value") != flagsStr) {
-			f.setAttribute("value", flagsStr);
+		if(f.value != flagsStr) {
+			f.value = flagsStr;
 			f.hidden = !flagsStr;
 		}
 	},
