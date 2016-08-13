@@ -657,12 +657,11 @@ PopupHandler.prototype = {
 		var regularFilter = !popup;
 		if(regularFilter) {
 			popup = this._currentPopup;
+			//if(!popup)
+			//	return;
 			filterString = this._filter;
 		}
 		var filter = filterString;
-
-		//if(!popup)
-		//	return;
 
 		_log("filterBookmarks(): \"" + filterString + "\"");
 
@@ -771,7 +770,6 @@ PopupHandler.prototype = {
 		}
 		else if(++_level > prefs.get("filterMaxLevel", 15)) {
 			_log("filterMaxLevel reached, stop filtering");
-			//return true;
 			return;
 		}
 
@@ -825,10 +823,6 @@ PopupHandler.prototype = {
 					? null
 					: matcher;
 
-				//if(!this.filterBookmarksPopup(mp, filterString, subMatcher, linear, parentPopup, _level))
-				//	hide = true;
-				//else
-				//	hasVisible = true;
 				this._filterAsyncTimer = delay(function() {
 					if(!this._currentPopup) {
 						_gen.next();
@@ -920,10 +914,9 @@ PopupHandler.prototype = {
 		}
 		else {
 			if(this._currentPopup)
-				this.showFilterDelay(true /*ignoreNotFound*/); // Ajust position
+				this.showFilterDelay(true /*ignoreNotFound*/); // Adjust position
 		}
 
-		//return hasVisible;
 		callback && callback.call(this, hasVisible);
 		yield 0;
 	},
@@ -932,9 +925,9 @@ PopupHandler.prototype = {
 		this.stopFilterDelay();
 		if(!restart)
 			this._filterInProgress = false;
-		this._filterRestore.forEach(function(f) {
+		this._filterRestore.forEach(function(fn) {
 			try {
-				f();
+				fn();
 			}
 			catch(e) {
 				Components.utils.reportError(e);
@@ -1275,11 +1268,9 @@ PopupHandler.prototype = {
 
 	attrHidden: "_bookmarksmenufilter_hidden",
 	hideNode: function(node) {
-		//node.hidden = true;
 		node.setAttribute(this.attrHidden, "true");
 	},
 	showNode: function(node) {
-		//node.hidden = false;
 		node.removeAttribute(this.attrHidden);
 	},
 	showNodes: function(parent) {
