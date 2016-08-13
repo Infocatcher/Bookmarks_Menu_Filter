@@ -11,6 +11,7 @@
 `*` Улучшена производительность при запуске: код для обработки меню перемещен в отдельный лениво загружаемый файл (<a href="https://github.com/Infocatcher/Bookmarks_Menu_Filter/issues/7">#7</a>).<br>
 `*` Улучшена производительность при запуске: вспомогательные функции перемещены в отдельный лениво загружаемый файл (<a href="https://github.com/Infocatcher/Bookmarks_Menu_Filter/issues/8">#8</a>).<br>
 `*` Улучшена совместимость с мультипроцессным режимом (Electrolysis aka e10s) (<a href="https://github.com/Infocatcher/Bookmarks_Menu_Filter/issues/9">#9</a>).<br>
+`x` Исправлена совместимость с Firefox 51+ (SyntaxError: non-generator method definitions may not contain yield).<br>
 
 ##### 0.1.0a38 (2014-06-30)
 `x` Исправлено определение встроенных приватных окон в SeaMonkey (было изменено в релизной версии).<br>

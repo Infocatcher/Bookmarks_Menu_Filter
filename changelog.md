@@ -11,6 +11,7 @@
 `*` Improved startup performance: code around menus handling was moved into lazily loaded separate file (<a href="https://github.com/Infocatcher/Bookmarks_Menu_Filter/issues/7">#7</a>).<br>
 `*` Improved startup performance: utilities functions was moved into lazily loaded separate file (<a href="https://github.com/Infocatcher/Bookmarks_Menu_Filter/issues/8">#8</a>).<br>
 `*` Improved compatibility with multi-process mode (Electrolysis aka e10s) (<a href="https://github.com/Infocatcher/Bookmarks_Menu_Filter/issues/9">#9</a>).<br>
+`x` Fixed compatibility with Firefox 51+ (SyntaxError: non-generator method definitions may not contain yield).<br>
 
 ##### 0.1.0a38 (2014-06-30)
 `x` Correctly detect built-in private windows in SeaMonkey (was changed in released version).<br>
