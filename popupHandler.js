@@ -1321,3 +1321,22 @@ PopupHandler.prototype = {
 		return node.localName == "menuitem" && this.isBookmarkItem(node);
 	}
 };
+
+function setProperty(o, p, v) {
+	setProperty = "defineProperty" in Object
+		? function(o, p, v) {
+			Object.defineProperty(o, p, {
+				value: v,
+				enumerable: true,
+				writable: true
+			});
+			return v;
+		}
+		: function(o, p, v) {
+			o.__defineGetter__(p, function() {
+				return v;
+			});
+			return v;
+		};
+	return setProperty.apply(this, arguments);
+}
