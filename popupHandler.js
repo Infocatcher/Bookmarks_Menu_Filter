@@ -41,7 +41,7 @@ PopupHandler.prototype = {
 			var document = window.document;
 			this.showNodes(document);
 			this.cleanPopups(document);
-			Array.slice(
+			Array.prototype.slice.call(
 				document.getElementsByAttribute(this.attrLoaded, "true")
 			).forEach(function(node) {
 				node.removeAttribute(this.attrLoaded);
@@ -106,7 +106,7 @@ PopupHandler.prototype = {
 			_log("Opened query popup");
 			var filter = popup[this.pFilter];
 			if(
-				Array.some(
+				Array.prototype.some.call(
 					popup.getElementsByTagName("menu"),
 					function(menu) {
 						return menu.getAttribute("tagContainer") == "true";
@@ -537,7 +537,7 @@ PopupHandler.prototype = {
 	get contextMenuOpened() {
 		var curPopup = this._currentPopup;
 		var doc = curPopup && curPopup.ownerDocument;
-		return doc && doc.popupNode && Array.some(
+		return doc && doc.popupNode && Array.prototype.some.call(
 			doc.getElementsByTagName("menupopup"),
 			function(popup) {
 				if(
@@ -773,7 +773,7 @@ PopupHandler.prototype = {
 			return;
 		}
 
-		var childs = Array.slice(popup.childNodes);
+		var childs = Array.prototype.slice.call(popup.childNodes);
 		var hasVisible = false;
 
 		for(var i = 0, l = childs.length; i < l; ++i) {
@@ -843,7 +843,7 @@ PopupHandler.prototype = {
 					this._filterRestore = this._filterRestore.filter(function(f) {
 						return f != restoreNode;
 					});
-					this._currentPopup && Array.forEach(
+					this._currentPopup && Array.prototype.forEach.call(
 						node.getElementsByTagName("menupopup"),
 						function(node) {
 							node.setAttribute(this.attrLoaded, "true");
@@ -940,7 +940,7 @@ PopupHandler.prototype = {
 		var document = popup.ownerDocument;
 		var window = document.defaultView;
 		var first = true;
-		Array.some(
+		Array.prototype.some.call(
 			popup.childNodes,
 			function(node) {
 				var nn = node.nodeName;
@@ -1281,14 +1281,14 @@ PopupHandler.prototype = {
 					: parent
 			)
 		);
-		Array.slice(
+		Array.prototype.slice.call(
 			parent.getElementsByAttribute(this.attrHidden, "true")
 		).forEach(function(node) {
 			this.showNode(node);
 		}, this);
 	},
 	cleanPopups: function(parent) {
-		Array.forEach(
+		Array.prototype.forEach.call(
 			parent.getElementsByTagName("menupopup"),
 			function(mp) {
 				delete mp[this.pFilter];
