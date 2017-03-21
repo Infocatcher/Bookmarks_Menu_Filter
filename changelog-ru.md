@@ -12,6 +12,8 @@
 `*` Улучшена производительность при запуске: вспомогательные функции перемещены в отдельный лениво загружаемый файл (<a href="https://github.com/Infocatcher/Bookmarks_Menu_Filter/issues/8">#8</a>).<br>
 `*` Улучшена совместимость с мультипроцессным режимом (Electrolysis aka e10s) (<a href="https://github.com/Infocatcher/Bookmarks_Menu_Filter/issues/9">#9</a>).<br>
 `x` Исправлена совместимость с Firefox 51+ (SyntaxError: non-generator method definitions may not contain yield).<br>
+`x` Исправлена совместимость с будущими версиями Firefox: прекращено использование Array generics вида `Array.forEach()` (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1222547">bug 1222547</a>).<br>
+`x` Исправлена совместимость с будущими версиями Firefox: прекращено использование legacy generators (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1083482">bug 1083482</a>).<br>
 
 ##### 0.1.0a38 (2014-06-30)
 `x` Исправлено определение встроенных приватных окон в SeaMonkey (было изменено в релизной версии).<br>
