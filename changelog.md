@@ -15,6 +15,7 @@
 `x` Fixed compatibility with future Firefox versions: don't use Array generics like `Array.forEach()` (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1222547">bug 1222547</a>).<br>
 `x` Fixed compatibility with future Firefox versions: don't use legacy generators (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1083482">bug 1083482</a>).<br>
 `x` Fixed compatibility with future Firefox versions: don't use deprecated `Date.prototype.toLocaleFormat()` in debug logs (<em>extensions.bookmarksMenuFilter.debug</em> = true) (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=818634">bug 818634</a>).<br>
+`x` Correctly handle Escape key in Pale Moon.<br>
 
 ##### 0.1.0a38 (2014-06-30)
 `x` Correctly detect built-in private windows in SeaMonkey (was changed in released version).<br>

@@ -15,6 +15,7 @@
 `x` Исправлена совместимость с будущими версиями Firefox: прекращено использование Array generics вида `Array.forEach()` (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1222547">bug 1222547</a>).<br>
 `x` Исправлена совместимость с будущими версиями Firefox: прекращено использование legacy generators (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1083482">bug 1083482</a>).<br>
 `x` Исправлена совместимость с будущими версиями Firefox: прекращено использование `Date.prototype.toLocaleFormat()` в отладочных логах (<em>extensions.bookmarksMenuFilter.debug</em> = true) (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=818634">bug 818634</a>).<br>
+`x` Исправлена обработка клавиши Escape в Pale Moon.<br>
 
 ##### 0.1.0a38 (2014-06-30)
 `x` Исправлено определение встроенных приватных окон в SeaMonkey (было изменено в релизной версии).<br>
