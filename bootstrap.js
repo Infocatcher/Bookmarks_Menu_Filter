@@ -127,12 +127,10 @@ var bmFilter = {
 			return;
 		var window = e.currentTarget;
 		window.removeEventListener(e.type, this, true);
-		var indx = this.getWindowIndex(window);
-		if(indx != -1) // Window already initialized
+		if(this.handlerKey in window) // Already initialized
 			return;
-		var i = ++this._currentId;
-		this._handlers[i] = new PopupHandler(window);
-		window._bookmarksMenuFilterId = i;
+		var id = window[this.handlerKey] = ++this._currentId;
+		this._handlers[id] = new PopupHandler(window);
 	},
 	isPlacesPopup: function(node) {
 		return node.getAttribute("placespopup") == "true"
@@ -146,11 +144,7 @@ var bmFilter = {
 
 	_currentId: -1,
 	_handlers: { __proto__: null },
-	getWindowIndex: function(window) {
-		if("_bookmarksMenuFilterId" in window)
-			return window._bookmarksMenuFilterId;
-		return -1;
-	},
+	handlerKey: "_bookmarksMenuFilterId",
 
 	initWindow: function(window, reason) {
 		if(reason == WINDOW_LOADED) {
@@ -166,14 +160,14 @@ var bmFilter = {
 		if(reason == WINDOW_CLOSED && !this.isTargetWindow(window))
 			return;
 		window.removeEventListener("popupshowing", this, true);
-		var indx = this.getWindowIndex(window);
-		if(indx == -1) // Nothing to destroy
+		if(!(this.handlerKey in window)) // Nothing to destroy
 			return;
-		var eh = this._handlers[indx];
+		var id = window[this.handlerKey];
+		var eh = this._handlers[id];
 		eh.destroy(reason);
-		delete this._handlers[indx];
-		delete window._bookmarksMenuFilterId;
-		_log("destroyWindow() #" + indx + " " + window.location);
+		delete this._handlers[id];
+		delete window[this.handlerKey];
+		_log("destroyWindow() #" + id + " " + window.location);
 	},
 	get isSeaMonkey() {
 		delete this.isSeaMonkey;
