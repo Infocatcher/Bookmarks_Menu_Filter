@@ -540,10 +540,7 @@ PopupHandler.prototype = {
 		return doc && doc.popupNode && Array.prototype.some.call(
 			doc.getElementsByTagName("menupopup"),
 			function(popup) {
-				if(
-					popup.state != "open"
-					|| popup.boxObject && popup.boxObject instanceof Components.interfaces.nsIMenuBoxObject
-				)
+				if(popup.state != "open")
 					return false;
 				_log("Opened context menu: " + popup.id);
 				return true;
