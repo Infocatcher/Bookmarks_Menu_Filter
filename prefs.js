@@ -1,25 +1,13 @@
+var prefsLoaded = true;
 var prefs = {
 	ns: "extensions.bookmarksMenuFilter.",
-	initialized: false,
 	init: function() {
-		if(this.initialized)
-			return;
-		this.initialized = true;
-
 		//~ todo: add new condition when https://bugzilla.mozilla.org/show_bug.cgi?id=564675 will be fixed
 		if(platformVersion >= 2)
 			this.loadDefaultPrefs();
 		Services.prefs.addObserver(this.ns, this, false);
 	},
-	delayedInit: function() {
-		if(!this.initialized)
-			timer(this.init, this, 100);
-	},
 	destroy: function() {
-		if(!this.initialized)
-			return;
-		this.initialized = false;
-
 		Services.prefs.removeObserver(this.ns, this);
 	},
 	observe: function(subject, topic, pName) {
@@ -100,3 +88,4 @@ var prefs = {
 		return Services.prefs.PREF_STRING;
 	}
 };
+prefs.init();

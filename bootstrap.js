@@ -4,6 +4,7 @@ const WINDOW_CLOSED = -2;
 const LOG_PREFIX = "[Bookmarks Menu Filter] ";
 var rootURI = "chrome://bookmarksmenufilter/content/";
 var platformVersion;
+var global = this;
 
 if(!("Services" in this))
 	Components.utils.import("resource://gre/modules/Services.jsm");
@@ -87,7 +88,7 @@ var bmFilter = {
 		Services.ww.registerNotification(this);
 
 		if(reason != APP_STARTUP)
-			prefs.init();
+			prefs; // Force load
 	},
 	destroy: function(reason) {
 		if(!this.initialized)
@@ -101,7 +102,6 @@ var bmFilter = {
 
 		if(reason != APP_SHUTDOWN)
 			this.ut.unloadStyles();
-		prefs.destroy();
 
 		for(var p in this._handlers) {
 			var eh = this._handlers[p];
@@ -109,6 +109,8 @@ var bmFilter = {
 			eh.destroy(reason);
 		}
 		this._handlers = { __proto__: null };
+
+		"prefsLoaded" in global && prefs.destroy();
 	},
 
 	observe: function(subject, topic, data) {
@@ -157,7 +159,9 @@ var bmFilter = {
 		if(reason == WINDOW_LOADED) {
 			if(!this.isTargetWindow(window))
 				return;
-			prefs.delayedInit();
+			if(!("prefsLoaded" in global)) timer(function() {
+				prefs;
+			}, this, 1500);
 		}
 		window.addEventListener("popupshowing", this, true);
 		//_log("initWindow() #" + i + " " + window.location);
