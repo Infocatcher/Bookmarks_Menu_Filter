@@ -831,9 +831,10 @@ PopupHandler.prototype = {
 	XULNS: "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul",
 	parseXULFromString: function(xul) {
 		xul = xul.replace(/>\s+</g, "><");
-		return new this.window.DOMParser()
-			.parseFromString(xul, "application/xml")
-			.documentElement;
+		var dp = new this.window.DOMParser();
+		if("forceEnableXULXBL" in dp) // Firefox 61+
+			dp.forceEnableXULXBL();
+		return dp.parseFromString(xul, "application/xml").documentElement;
 	},
 	get tt() {
 		var window = this.window;
