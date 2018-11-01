@@ -70,10 +70,9 @@ function shutdown(params, reason) {
 var bmFilter = {
 	get ut() {
 		_log("Load utils.js");
-		var scope = {};
-		Services.scriptloader.loadSubScript(rootURI + "utils.js", scope, "UTF-8");
+		Services.scriptloader.loadSubScript(rootURI + "utils.js", global, "UTF-8");
 		delete this.ut;
-		return this.ut = scope.bmUtils;
+		return this.ut = bmUtils;
 	},
 
 	initialized: false,
