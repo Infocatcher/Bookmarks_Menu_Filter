@@ -25,6 +25,9 @@ var bmUtils = {
 			var findUpper = find.toUpperCase();
 			if(findUpper != find)
 				appendFilter(findUpper, replacement.toUpperCase());
+			var findLocaleUpper = find.toLocaleUpperCase();
+			if(findLocaleUpper != find && findLocaleUpper != findUpper)
+				appendFilter(findLocaleUpper, replacement.toLocaleUpperCase());
 		}
 		return this.applyReplacements = replacements.length
 			? this._applyReplacements
