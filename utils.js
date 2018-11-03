@@ -9,6 +9,10 @@ var bmUtils = {
 			var data = JSON.parse(prefs.get("replacements", "{}"));
 		}
 		catch(e) {
+			Components.utils.reportError(
+				LOG_PREFIX + 'Invalid JSON in "' + prefs.ns
+				+ 'replacements" preference, please check about:config'
+			);
 			Components.utils.reportError(e);
 		}
 		function appendFilter(find, replacement) {
@@ -16,6 +20,10 @@ var bmUtils = {
 				replacements.push([new RegExp(find, "g"), replacement]);
 			}
 			catch(e) {
+				Components.utils.reportError(
+					LOG_PREFIX + 'Invalid regular expression in "' + prefs.ns
+					+ 'replacements" preference, please check about:config:\n' + find
+				);
 				Components.utils.reportError(e);
 			}
 		}
